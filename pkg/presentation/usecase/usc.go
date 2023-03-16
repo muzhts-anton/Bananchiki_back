@@ -7,14 +7,20 @@ import (
 	"banana/pkg/presentation/delivery/grpc"
 )
 
-type presUsecase struct {
-	presClient grpc.ParsingClient
+type PresUsecase struct {
+	PresClient grpc.ParsingClient
 }
 
-func (pu *presUsecase) uploadPres(s *domain.Presentation) error {
-	pu.presClient.Split(context.Background(), &grpc.Pres{
+func InitPresUscase(uc grpc.ParsingClient) *PresUsecase {
+	return &PresUsecase{
+		PresClient: uc,
+	}
+}
+
+func (pu *PresUsecase) UploadPres(s *domain.Presentation) error {
+	pu.PresClient.Split(context.Background(), &grpc.Pres{
 		Url: s.Url,
-		Id: s.CreatorId,
+		Id:  s.CreatorId,
 	})
 	return nil
 }

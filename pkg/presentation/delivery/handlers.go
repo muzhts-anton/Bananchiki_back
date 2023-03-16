@@ -1,16 +1,16 @@
 package presdel
 
 import (
-	"banana/pkg/domain"
+	"banana/pkg/presentation/usecase"
 
 	"github.com/gorilla/mux"
 )
 
 type PresHandler struct {
-	PresUsecase domain.PresUsecase
+	PresUsecase *presusc.PresUsecase
 }
 
-func SetQuizHandlers(router *mux.Router, uc domain.PresUsecase) {
+func SetPresHandlers(router *mux.Router, uc *presusc.PresUsecase) {
 	handler := &PresHandler{
 		PresUsecase: uc,
 	}
