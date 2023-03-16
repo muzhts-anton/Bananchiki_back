@@ -25,7 +25,7 @@ func main() {
 	quizUsc := quizusc.InitAnnUsc(quizRep)
 	quizdel.SetQuizHandlers(api, quizUsc)
 
-	conn, _ := grpc.Dial(":5051", grpc.WithInsecure())
+	conn, _ := grpc.Dial(":50051", grpc.WithInsecure())
 	c := tmp.NewParsingClient(conn)
 
 	t1 := presusc.InitPresUscase(c)

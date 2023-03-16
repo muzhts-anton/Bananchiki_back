@@ -13,7 +13,14 @@ message Pres {
     uint64 id = 2;
 }
 
+message Slide {
+    string name = 1;
+    uint32 image_width = 2;
+    uint32 image_height = 3;
+}
+
 message Slides {
     string url = 1;
-    uint32 num = 2;
+    repeated Slide slide = 2;
+    uint32 num = 3;
 }

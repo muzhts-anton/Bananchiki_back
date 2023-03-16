@@ -2,6 +2,7 @@ package presusc
 
 import (
 	"context"
+	"fmt"
 
 	"banana/pkg/domain"
 	"banana/pkg/presentation/delivery/grpc"
@@ -18,9 +19,10 @@ func InitPresUscase(uc grpc.ParsingClient) *PresUsecase {
 }
 
 func (pu *PresUsecase) UploadPres(s *domain.Presentation) error {
-	pu.PresClient.Split(context.Background(), &grpc.Pres{
+	tmp, err := pu.PresClient.Split(context.Background(), &grpc.Pres{
 		Url: s.Url,
 		Id:  s.CreatorId,
 	})
+	fmt.Println(tmp, err)
 	return nil
 }
