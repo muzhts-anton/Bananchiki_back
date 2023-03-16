@@ -3,9 +3,9 @@ package main
 import (
 	"github.com/gorilla/mux"
 
-	"banana/pkg/show/delivery"
-	"banana/pkg/show/usecase"
-	"banana/pkg/show/repository"
+	"banana/pkg/quiz/delivery"
+	"banana/pkg/quiz/usecase"
+	"banana/pkg/quiz/repository"
 
 	"fmt"
 	"net/http"

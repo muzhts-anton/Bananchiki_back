@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package pres;
+
+option go_package = "./pkg/presentation/delivery/grpc/";
+
+service Parsing {
+    rpc Split(Pres) returns (Slides);
+}
+
+message Pres {
+    string url = 1;
+    uint64 id = 2;
+}
+
+message Slides {
+    string url = 1;
+    uint32 num = 2;
+}
