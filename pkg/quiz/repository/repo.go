@@ -46,6 +46,13 @@ func (r *dbQuizRepository) CreateQuiz(q domain.Quiz, pid uint64) (uint64, error)
 		return 0, domain.ErrDatabaseRequest
 	}
 
+	err = r.dbm.Execute(queryIncrementQuizNum, pid)
+	if err != nil {
+		log.Warn("{CreateQuiz} in query: " + queryIncrementQuizNum)
+		log.Error(err)
+		return 0, domain.ErrDatabaseRequest
+	}
+
 	return q.Id, nil
 }
 
@@ -67,6 +74,13 @@ func (r *dbQuizRepository) DeleteQuiz(qid, pid uint64) error {
 	err = r.dbm.Execute(queryDeleteVotes, qid)
 	if err != nil {
 		log.Warn("{DeleteQuiz} in query: " + queryDeleteVotes)
+		log.Error(err)
+		return domain.ErrDatabaseRequest
+	}
+
+	err = r.dbm.Execute(queryDecrementQuizNum, pid)
+	if err != nil {
+		log.Warn("{CreateQuiz} in query: " + queryDecrementQuizNum)
 		log.Error(err)
 		return domain.ErrDatabaseRequest
 	}

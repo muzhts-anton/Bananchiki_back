@@ -6,14 +6,24 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
-type getPresHttp struct {
-	UserId int `json:"userId"`
-	PresId int `json:"presId"`
+type presApiRequest struct {
+	CreatorId uint64 `json:"creatorId"`
 }
 
+// /presentation/{id}
 func (h *presHandler) getPres(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	presId, err := strconv.ParseUint(params["id"], 10, 64)
+	if err != nil {
+		http.Error(w, domain.ErrUrlParameter.Error(), http.StatusBadRequest)
+		return
+	}
+
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {
@@ -21,20 +31,22 @@ func (h *presHandler) getPres(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var p getPresHttp
+	var p presApiRequest
 	err = json.Unmarshal(b, &p)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	// err = h.PresUsecase.GetPres(p) //
+	pres, err := h.PresUsecase.GetPres(p.CreatorId, presId)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	out, err := json.Marshal(p)
+	out, err := json.Marshal(struct {
+		Pres domain.PresApiResponse `json:"pres"`
+	}{Pres: pres})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -44,11 +56,12 @@ func (h *presHandler) getPres(w http.ResponseWriter, r *http.Request) {
 	w.Write(out)
 }
 
+// /presentation/create
 func (h *presHandler) createPres(w http.ResponseWriter, r *http.Request) {
 	tmp := domain.Presentation{
-		Url: "/tmp/pres",
+		Url:       "/tmp/pres",
 		CreatorId: 35152,
 	}
-	h.PresUsecase.UploadPres(&tmp)
+	h.PresUsecase.CreatePres(&tmp)
 	w.WriteHeader(http.StatusOK)
 }

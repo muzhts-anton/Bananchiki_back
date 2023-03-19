@@ -12,6 +12,7 @@ import (
 	"banana/pkg/quiz/usecase"
 
 	"banana/pkg/presentation/delivery"
+	"banana/pkg/presentation/repository"
 	"banana/pkg/presentation/usecase"
 
 	"fmt"
@@ -25,7 +26,7 @@ func main() {
 	db := database.InitDatabase()
 	db.Connect()
 	defer db.Disconnect()
-	
+
 	quizRep := quizrep.InitQuizRep(db)
 	quizUsc := quizusc.InitQuizUsc(quizRep)
 	quizdel.SetQuizHandlers(api, quizUsc)
@@ -33,7 +34,8 @@ func main() {
 	conn, _ := grpc.Dial(":50051", grpc.WithInsecure())
 	c := presgrpc.NewParsingClient(conn)
 
-	presUsc := presusc.InitPresUscase(c)
+	presRepo := presrep.InitPresRep(db)
+	presUsc := presusc.InitPresUscase(c, presRepo)
 	presdel.SetPresHandlers(api, presUsc)
 
 	server := http.Server{

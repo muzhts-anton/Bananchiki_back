@@ -40,6 +40,14 @@ const (
 		graph_color
 	WHERE id = $6;
 	`
+
+	queryIncrementQuizNum = `
+	UPDATE presentation SET quiz_num = quiz_num + 1 WHERE id = $1;
+	`
+
+	queryDecrementQuizNum = `
+	UPDATE presentation SET quiz_num = quiz_num - 1 WHERE id = $1;
+	`
 )
 
 const (
