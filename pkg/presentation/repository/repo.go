@@ -1,27 +1,20 @@
-package quizrep
+package presrep
 
 import (
 	"banana/pkg/domain"
 )
 
-type dbQuizRepository struct {
-	data []domain.Quiz
+type dbPresRepository struct {
 }
 
-func InitQuizRep() domain.QuizRepository {
-	return &dbQuizRepository{
-		data: make([]domain.Quiz, 1),
-	}
+func InitPresRep() domain.PresRepository {
+	return &dbPresRepository{}
 }
 
-func (r *dbQuizRepository) CreateQuiz(q *domain.Quiz) error {
+func (r *dbPresRepository) CreatePres(q *domain.Presentation) error {
 	return nil
 }
 
-func (r *dbQuizRepository) VoteQuiz(q *domain.Quiz) error {
-	return nil
-}
-
-func (r *dbQuizRepository) ShowQuiz(q *domain.Quiz) error {
+func (r *dbPresRepository) GetPres(q *domain.Presentation) error {
 	return nil
 }

@@ -4,7 +4,8 @@ import (
 	"github.com/gorilla/mux"
 	"google.golang.org/grpc"
 
-	tmp "banana/pkg/presentation/delivery/grpc"
+	"banana/pkg/database"
+	presgrpc "banana/pkg/presentation/delivery/grpc"
 
 	"banana/pkg/quiz/delivery"
 	"banana/pkg/quiz/repository"
@@ -21,17 +22,20 @@ func main() {
 	router := mux.NewRouter()
 	api := router.PathPrefix("/api/v1").Subrouter()
 
-	quizRep := quizrep.InitQuizRep()
-	quizUsc := quizusc.InitAnnUsc(quizRep)
+	db := database.InitDatabase()
+	db.Connect()
+	defer db.Disconnect()
+	
+	quizRep := quizrep.InitQuizRep(db)
+	quizUsc := quizusc.InitQuizUsc(quizRep)
 	quizdel.SetQuizHandlers(api, quizUsc)
 
 	conn, _ := grpc.Dial(":50051", grpc.WithInsecure())
-	c := tmp.NewParsingClient(conn)
+	c := presgrpc.NewParsingClient(conn)
 
-	t1 := presusc.InitPresUscase(c)
-	presdel.SetPresHandlers(api, t1)
+	presUsc := presusc.InitPresUscase(c)
+	presdel.SetPresHandlers(api, presUsc)
 
-	fmt.Println("start")
 	server := http.Server{
 		Addr:    fmt.Sprintf(":%s", "3000"),
 		Handler: router,

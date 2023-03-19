@@ -8,11 +8,8 @@ import (
 	"net/http"
 )
 
-type quizHttp struct {
-	Quiz *domain.Quiz `json:"quiz"`
-}
-
-func (h *QuizHandler) createQuiz(w http.ResponseWriter, r *http.Request) {
+// /quiz/create
+func (h *quizHandler) createQuiz(w http.ResponseWriter, r *http.Request) {
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {
@@ -20,22 +17,23 @@ func (h *QuizHandler) createQuiz(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	q := quizHttp {
-		Quiz: new(domain.Quiz),
-	}
+	q := domain.QuizHTTP{}
 	err = json.Unmarshal(b, &q)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	err = h.QuizUsecase.CreateQuiz(q.Quiz)
+	qid, err := h.QuizUsecase.CreateQuiz(q.Quiz, q.CreatorId, q.PresId)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	out, err := json.Marshal(q)
+	out, err := json.Marshal(struct {
+		Id uint64 `json:"quizId"`
+	}{Id: qid},
+	)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -45,7 +43,8 @@ func (h *QuizHandler) createQuiz(w http.ResponseWriter, r *http.Request) {
 	w.Write(out)
 }
 
-func (h *QuizHandler) voteQuiz(w http.ResponseWriter, r *http.Request) {
+// /quiz/update
+func (h *quizHandler) updateQuiz(w http.ResponseWriter, r *http.Request) {
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {
@@ -53,32 +52,24 @@ func (h *QuizHandler) voteQuiz(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	q := quizHttp {
-		Quiz: new(domain.Quiz),
-	}
+	var q domain.QuizHTTP
 	err = json.Unmarshal(b, &q)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	err = h.QuizUsecase.VoteQuiz(q.Quiz)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	out, err := json.Marshal(q)
+	err = h.QuizUsecase.UpdateQuiz(q.Quiz, q.CreatorId, q.PresId)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
-	w.Write(out)
 }
 
-func (h *QuizHandler) showQuiz(w http.ResponseWriter, r *http.Request) {
+// quiz/delete
+func (h *quizHandler) deleteQuiz(w http.ResponseWriter, r *http.Request) {
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {
@@ -86,27 +77,93 @@ func (h *QuizHandler) showQuiz(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	q := quizHttp {
-		Quiz: new(domain.Quiz),
-	}
+	var q domain.QuizHTTP
 	err = json.Unmarshal(b, &q)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	err = h.QuizUsecase.ShowQuiz(q.Quiz)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	out, err := json.Marshal(q)
+	err = h.QuizUsecase.DeleteQuiz(q.Quiz.Id, q.CreatorId, q.PresId)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
-	w.Write(out)
+}
+
+// quiz/vote/delete
+func (h *quizHandler) deleteQuizVote(w http.ResponseWriter, r *http.Request) {
+	b, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	var q domain.VoteHTTP
+	err = json.Unmarshal(b, &q)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = h.QuizUsecase.DeleteQuizVote(q.Vote.Idx, q.QuizId, q.CreatorId)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+// /quiz/vote/update
+func (h *quizHandler) updateQuizVote(w http.ResponseWriter, r *http.Request) {
+	b, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	var q domain.QuizHTTP
+	err = json.Unmarshal(b, &q)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = h.QuizUsecase.UpdateQuizVote(q.Quiz.Votes, q.Quiz.Id, q.CreatorId)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+// /quiz/vote/create
+func (h *quizHandler) createQuizVote(w http.ResponseWriter, r *http.Request) {
+	b, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	var q domain.VoteHTTP
+	err = json.Unmarshal(b, &q)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = h.QuizUsecase.CreateQuizVote(q.Vote, q.QuizId, q.CreatorId)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }

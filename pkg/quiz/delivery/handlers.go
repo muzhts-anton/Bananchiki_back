@@ -6,16 +6,19 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type QuizHandler struct {
+type quizHandler struct {
 	QuizUsecase domain.QuizUsecase
 }
 
 func SetQuizHandlers(router *mux.Router, uc domain.QuizUsecase) {
-	handler := &QuizHandler{
+	handler := &quizHandler{
 		QuizUsecase: uc,
 	}
 
-	router.HandleFunc(createQuiz, handler.createQuiz).Methods("POST", "OPTIONS")
-	router.HandleFunc(voteQuiz, handler.voteQuiz).Methods("POST", "OPTIONS")
-	router.HandleFunc(showQuiz, handler.showQuiz).Methods("GET", "OPTIONS")
+	router.HandleFunc(urlCreateQuiz, handler.createQuiz).Methods("POST", "OPTIONS")
+	router.HandleFunc(urlDeleteQuiz, handler.deleteQuiz).Methods("DELETE", "OPTIONS")
+	router.HandleFunc(urlUpdateQuiz, handler.updateQuiz).Methods("PUT", "OPTIONS")
+	router.HandleFunc(urlCreateQuizVote, handler.createQuizVote).Methods("POST", "OPTIONS")
+	router.HandleFunc(urlDeleteQuizVote, handler.deleteQuizVote).Methods("DELETE", "OPTIONS")
+	router.HandleFunc(urlUpdateQuizVote, handler.updateQuizVote).Methods("PUT", "OPTIONS")
 }

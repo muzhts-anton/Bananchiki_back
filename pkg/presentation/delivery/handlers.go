@@ -6,15 +6,15 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type PresHandler struct {
+type presHandler struct {
 	PresUsecase *presusc.PresUsecase
 }
 
 func SetPresHandlers(router *mux.Router, uc *presusc.PresUsecase) {
-	handler := &PresHandler{
+	handler := &presHandler{
 		PresUsecase: uc,
 	}
 
-	router.HandleFunc(getPres, handler.getPres).Methods("GET", "OPTIONS")
-	router.HandleFunc(uploadPres, handler.uploadPres).Methods("POST", "OPTIONS")
+	router.HandleFunc(urlGetPres, handler.getPres).Methods("GET", "OPTIONS")
+	router.HandleFunc(urlCreatePres, handler.createPres).Methods("POST", "OPTIONS")
 }

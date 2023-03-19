@@ -13,7 +13,7 @@ type getPresHttp struct {
 	PresId int `json:"presId"`
 }
 
-func (h *PresHandler) getPres(w http.ResponseWriter, r *http.Request) {
+func (h *presHandler) getPres(w http.ResponseWriter, r *http.Request) {
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {
@@ -44,7 +44,7 @@ func (h *PresHandler) getPres(w http.ResponseWriter, r *http.Request) {
 	w.Write(out)
 }
 
-func (h *PresHandler) uploadPres(w http.ResponseWriter, r *http.Request) {
+func (h *presHandler) createPres(w http.ResponseWriter, r *http.Request) {
 	tmp := domain.Presentation{
 		Url: "/tmp/pres",
 		CreatorId: 35152,

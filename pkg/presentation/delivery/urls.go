@@ -1,6 +1,6 @@
 package presdel
 
 const (
-	getPres    = "/presentation"
-	uploadPres = "/presentation/upload"
+	urlGetPres    = "/presentation/{id:[0-9]+}"
+	urlCreatePres = "/presentation/create"
 )

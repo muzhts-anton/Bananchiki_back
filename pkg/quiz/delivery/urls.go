@@ -1,7 +1,10 @@
 package quizdel
 
 const (
-	createQuiz = "/quiz/create"
-	voteQuiz   = "/quiz/vote"
-	showQuiz   = "/quiz/show"
+	urlCreateQuiz     = "/quiz/create"
+	urlUpdateQuiz     = "/quiz/update"
+	urlDeleteQuiz     = "/quiz/delete"
+	urlCreateQuizVote = "/quiz/vote/create"
+	urlUpdateQuizVote = "/quiz/vote/update"
+	urlDeleteQuizVote = "/quiz/vote/delete"
 )

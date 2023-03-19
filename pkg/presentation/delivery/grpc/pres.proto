@@ -4,23 +4,22 @@ package pres;
 
 option go_package = "./pkg/presentation/delivery/grpc/";
 
-service Parsing {
-    rpc Split(Pres) returns (Slides);
-}
+service Parsing { rpc Split(Pres) returns (Slides); }
 
 message Pres {
-    string url = 1;
-    uint64 id = 2;
+  string url = 1;
+  uint64 id = 2;
 }
 
 message Slide {
-    string name = 1;
-    uint32 image_width = 2;
-    uint32 image_height = 3;
+  string name = 1;
+  uint32 image_width = 2;
+  uint32 image_height = 3;
+  uint32 idx = 4;
 }
 
 message Slides {
-    string url = 1;
-    repeated Slide slide = 2;
-    uint32 num = 3;
+  string url = 1;
+  repeated Slide slide = 2;
+  uint32 num = 3;
 }
