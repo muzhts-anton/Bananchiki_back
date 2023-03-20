@@ -49,10 +49,12 @@ type PresRepository interface {
 	GetPres(pid uint64) (Presentation, error)
 	GetConvertedSlides(t string, pid uint64) ([]ConvertedSlide, error)
 	GetQuizzes(t string, pid uint64) ([]Quiz, error)
-	CreatePres(p *Presentation) error
+	CreatePres(cid uint64) (uint64, error)
+	CreateCovertedSlides(pid uint64, slides []ConvertedSlide) error
+	UpdatePresUrl(pid uint64, url string) error
 }
 
 type PresUsecase interface {
 	GetPres(cid, pid uint64) (PresApiResponse, error)
-	CreatePres(p *Presentation) error
+	CreatePres(url string) (uint64, error)
 }

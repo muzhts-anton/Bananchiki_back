@@ -17,7 +17,56 @@ func InitPresRep(manager *database.DBManager) domain.PresRepository {
 	}
 }
 
-func (r *dbPresRepository) CreatePres(q *domain.Presentation) error {
+func (r *dbPresRepository) CreatePres(cid uint64) (uint64, error) {
+	resp, err := r.dbm.Query(queryCreatePres, cid, "")
+	if err != nil {
+		log.Warn("{CreatePres} in query: " + queryCreatePres)
+		log.Error(err)
+		return 0, domain.ErrDatabaseRequest
+	}
+
+	return cast.ToUint64(resp[0][0]), nil
+}
+
+func (r *dbPresRepository) UpdatePresUrl(pid uint64, url string) error {
+	err := r.dbm.Execute(queryUpdatePresUrl, url, pid)
+	if err != nil {
+		log.Warn("{CreatePres} in query: " + queryUpdatePresUrl)
+		log.Error(err)
+		return err
+	}
+
+	return nil
+}
+
+func (r *dbPresRepository) CreateCovertedSlides(pid uint64, slides []domain.ConvertedSlide) (err error) {
+	var resp []database.DBbyterow
+
+	for _, slide := range slides {
+		resp, err = r.dbm.Query(queryCreateConvertedSlide, slide.Name, slide.Width, slide.Height)
+		if err != nil {
+			log.Warn("{CreateCovertedSlides} in query: " + queryCreateConvertedSlide)
+			log.Error(err)
+			return err
+		}
+
+		slideId := cast.ToUint64(resp[0][0])
+
+		err = r.dbm.Execute(queryInsertConvertedSlide, pid, domain.SildeTypeConvertedSlide, slideId, slide.Idx)
+		if err != nil {
+			log.Warn("{CreateCovertedSlides} in query: " + queryInsertConvertedSlide)
+			log.Error(err)
+			return err
+		}
+	}
+	
+	err = r.dbm.Execute(queryUpdateConvertedSlideNum, len(slides), pid)
+		if err != nil {
+			log.Warn("{CreateCovertedSlides} in query: " + queryUpdateConvertedSlideNum)
+			log.Error(err)
+			return err
+		}
+
 	return nil
 }
 

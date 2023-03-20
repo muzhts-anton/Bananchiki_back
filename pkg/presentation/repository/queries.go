@@ -1,6 +1,33 @@
 package presrep
 
 const (
+	queryCreatePres = `
+	INSERT INTO presentation (creator_id, url)
+	VALUES ($1, $2)
+	RETURNING id;
+	`
+
+	queryCreateConvertedSlide = `
+	INSERT INTO convertedslide (name, width, height)
+	VALUES ($1, $2, $3)
+	RETURNING id;
+	`
+
+	queryInsertConvertedSlide = `
+	INSERT INTO slideorder (presentation_id, type, item_id, idx)
+	VALUES ($1, $2, $3, $4);
+	`
+
+	queryUpdateConvertedSlideNum = `
+	UPDATE presentation SET converted_slide_num = $1 WHERE id = $2;
+	`
+
+	queryUpdatePresUrl = `
+	UPDATE presentation SET url = $1 WHERE id = $2;
+	`
+)
+
+const (
 	queryGetPres = `
 	SELECT (id, creator_id, url, converted_slide_num, quiz_num)
 	FROM presentation

@@ -2,6 +2,8 @@ package presdel
 
 import (
 	"banana/pkg/domain"
+	"banana/pkg/utils/filesaver"
+	"path/filepath"
 
 	"encoding/json"
 	"io/ioutil"
@@ -14,6 +16,11 @@ import (
 type presApiRequest struct {
 	CreatorId uint64 `json:"creatorId"`
 }
+
+const (
+	presentationPath = "/static/presentation/file/"
+	slidesPath       = "/static/presentation/slides/"
+)
 
 // /presentation/{id}
 func (h *presHandler) getPres(w http.ResponseWriter, r *http.Request) {
@@ -58,10 +65,39 @@ func (h *presHandler) getPres(w http.ResponseWriter, r *http.Request) {
 
 // /presentation/create
 func (h *presHandler) createPres(w http.ResponseWriter, r *http.Request) {
-	tmp := domain.Presentation{
-		Url:       "/tmp/pres",
-		CreatorId: 35152,
+	err := r.ParseMultipartForm(10 * 1024 * 1024) // limit 10Mb
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
-	h.PresUsecase.CreatePres(&tmp)
+
+	uploaded, header, err := r.FormFile("presentation")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer uploaded.Close()
+
+	filename, err := filesaver.UploadFile(uploaded, presentationPath, filepath.Ext(header.Filename))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	presId, err := h.PresUsecase.CreatePres(filesaver.RootPath + presentationPath + filename)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	marshalledUs, err := json.Marshal(struct {
+		PresId uint64 `json:"presId"`
+	}{PresId: presId})
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	w.WriteHeader(http.StatusOK)
+	w.Write(marshalledUs)
 }

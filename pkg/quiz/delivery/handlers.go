@@ -16,9 +16,9 @@ func SetQuizHandlers(router *mux.Router, uc domain.QuizUsecase) {
 	}
 
 	router.HandleFunc(urlCreateQuiz, handler.createQuiz).Methods("POST", "OPTIONS")
-	router.HandleFunc(urlDeleteQuiz, handler.deleteQuiz).Methods("DELETE", "OPTIONS")
+	router.HandleFunc(urlDeleteQuiz, handler.deleteQuiz).Methods("POST", "OPTIONS")
 	router.HandleFunc(urlUpdateQuiz, handler.updateQuiz).Methods("PUT", "OPTIONS")
 	router.HandleFunc(urlCreateQuizVote, handler.createQuizVote).Methods("POST", "OPTIONS")
-	router.HandleFunc(urlDeleteQuizVote, handler.deleteQuizVote).Methods("DELETE", "OPTIONS")
+	router.HandleFunc(urlDeleteQuizVote, handler.deleteQuizVote).Methods("POST", "OPTIONS")
 	router.HandleFunc(urlUpdateQuizVote, handler.updateQuizVote).Methods("PUT", "OPTIONS")
 }
