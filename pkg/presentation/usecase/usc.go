@@ -82,7 +82,7 @@ func (pu *PresUsecase) GetPres(cid, pid uint64) (p domain.PresApiResponse, err e
 	var totalidx uint32 = uint32(len(pres.Slides) + len(pres.Quizzes))
 	var tmpidx, qi, si uint32
 	for tmpidx < totalidx {
-		if tmpidx == pres.Quizzes[qi].Idx {
+		if qi < uint32(len(pres.Quizzes)) && tmpidx == pres.Quizzes[qi].Idx {
 			p.Slides = append(p.Slides, domain.SlideApiResponse{
 				Idx:        pres.Quizzes[qi].Idx,
 				Kind:       domain.SlideTypeQuiz,
@@ -96,7 +96,7 @@ func (pu *PresUsecase) GetPres(cid, pid uint64) (p domain.PresApiResponse, err e
 				GraphColor: pres.Quizzes[qi].GraphColor,
 			})
 			qi++
-		} else {
+		} else if si < uint32(len(pres.Slides)) {
 			p.Slides = append(p.Slides, domain.SlideApiResponse{
 				Idx:    pres.Slides[si].Idx,
 				Kind:   domain.SildeTypeConvertedSlide,

@@ -6,7 +6,6 @@ import (
 	"path/filepath"
 
 	"encoding/json"
-	"io/ioutil"
 	"net/http"
 	"strconv"
 
@@ -31,21 +30,7 @@ func (h *presHandler) getPres(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	b, err := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	var p presApiRequest
-	err = json.Unmarshal(b, &p)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	pres, err := h.PresUsecase.GetPres(p.CreatorId, presId)
+	pres, err := h.PresUsecase.GetPres(1, presId)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
