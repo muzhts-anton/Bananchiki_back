@@ -12,12 +12,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type presApiRequest struct {
-	CreatorId uint64 `json:"creatorId"`
-}
-
 const (
-	presentationPath = "/static/presentation/file/"
+	presentationPath = "/static/presentation/files/"
 	slidesPath       = "/static/presentation/slides/"
 )
 

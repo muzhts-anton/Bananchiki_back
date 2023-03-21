@@ -57,14 +57,32 @@ func (r *dbQuizRepository) CreateQuiz(q domain.Quiz, pid uint64) (uint64, error)
 }
 
 func (r *dbQuizRepository) DeleteQuiz(qid, pid uint64) error {
-	err := r.dbm.Execute(queryDeleteQuiz, qid)
+	resp, err := r.dbm.Query(queryGetQuizIdx, domain.SlideTypeQuiz, qid)
+	if err != nil {
+		log.Warn("{DeleteQuiz} in query: " + queryDeleteQuiz)
+		log.Error(err)
+		return domain.ErrDatabaseRequest
+	}
+	if len(resp) == 0 {
+		log.Error(domain.ErrDatabaseRequest)
+		return domain.ErrDatabaseRequest
+	}
+	
+	err = r.dbm.Execute(queryDeleteQuiz, qid)
 	if err != nil {
 		log.Warn("{DeleteQuiz} in query: " + queryDeleteQuiz)
 		log.Error(err)
 		return domain.ErrDatabaseRequest
 	}
 
-	err = r.dbm.Execute(queryShiftDownIdxs, qid)
+	err = r.dbm.Execute(queryCutQuiz, domain.SlideTypeQuiz, qid)
+	if err != nil {
+		log.Warn("{DeleteQuiz} in query: " + queryCutQuiz)
+		log.Error(err)
+		return domain.ErrDatabaseRequest
+	}
+
+	err = r.dbm.Execute(queryShiftDownIdxs, cast.ToUint16(resp[0][0]), pid)
 	if err != nil {
 		log.Warn("{DeleteQuiz} in query: " + queryShiftDownIdxs)
 		log.Error(err)
@@ -89,7 +107,7 @@ func (r *dbQuizRepository) DeleteQuiz(qid, pid uint64) error {
 }
 
 func (r *dbQuizRepository) UpdateQuiz(q domain.Quiz, pid uint64) error {
-	err := r.dbm.Execute(queryUpdateQuiz)
+	err := r.dbm.Execute(queryUpdateQuiz, q.Question, q.Background, q.FontColor, q.FontSize, q.GraphColor, q.Id)
 	if err != nil {
 		log.Warn("{UpdateQuiz} in query: " + queryUpdateQuiz)
 		log.Error(err)

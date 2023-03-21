@@ -14,11 +14,19 @@ const (
 	`
 
 	queryShiftUpIdxs = `
-	UPDATE slideorder SET idx = idx + 1 WHERE idx >= $1 AND pres_id = $2;
+	UPDATE slideorder SET idx = idx + 1 WHERE idx >= $1 AND presentation_id = $2;
+	`
+
+	queryGetQuizIdx = `
+	SELECT idx from slideorder WHERE type = $1 AND item_id = $2;
 	`
 
 	queryDeleteQuiz = `
 	DELETE FROM quiz WHERE id = $1;
+	`
+
+	queryCutQuiz = `
+	DELETE FROM slideorder WHERE type = $1 AND item_id = $2;
 	`
 
 	queryShiftDownIdxs = `
@@ -32,12 +40,11 @@ const (
 	queryUpdateQuiz = `
 	UPDATE quiz
 	SET
-		type = $1,
-		question = $2,
-		background = $3,
-		font_color = $4,
-		font_size = $5,
-		graph_color
+		question = $1,
+		background = $2,
+		font_color = $3,
+		font_size = $4,
+		graph_color = $5
 	WHERE id = $6;
 	`
 

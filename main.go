@@ -26,6 +26,7 @@ func main() {
 	api := router.PathPrefix("/api/v1").Subrouter()
 
 	api.Use(Logger)
+	api.Use(Cors)
 	api.Use(PanicRecovery)
 
 	db := database.InitDatabase()

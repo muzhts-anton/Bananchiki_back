@@ -17,7 +17,7 @@ type Quiz struct {
 	Votes      []Vote `json:"votes"`
 	Background string `json:"background"`
 	FontColor  string `json:"fontColor"`
-	FontSize   string `json:"fontSize"`
+	FontSize   uint32 `json:"fontSize"`
 	GraphColor string `json:"graphColor"`
 }
 
