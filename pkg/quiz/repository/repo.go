@@ -67,7 +67,7 @@ func (r *dbQuizRepository) DeleteQuiz(qid, pid uint64) error {
 		log.Error(domain.ErrDatabaseRequest)
 		return domain.ErrDatabaseRequest
 	}
-	
+
 	err = r.dbm.Execute(queryDeleteQuiz, qid)
 	if err != nil {
 		log.Warn("{DeleteQuiz} in query: " + queryDeleteQuiz)
@@ -148,14 +148,14 @@ func (r *dbQuizRepository) UpdateQuizVote(q domain.Vote, qid uint64) error {
 }
 
 func (r *dbQuizRepository) DeleteQuizVote(idx uint32, qid uint64) error {
-	err := r.dbm.Execute(queryDeleteQuizVote, qid, idx)
+	err := r.dbm.Execute(queryDeleteQuizVote, idx, qid)
 	if err != nil {
 		log.Warn("{DeleteQuizVote} in query: " + queryDeleteQuizVote)
 		log.Error(err)
 		return domain.ErrDatabaseRequest
 	}
 
-	err = r.dbm.Execute(queryShiftDownVote, idx)
+	err = r.dbm.Execute(queryShiftDownVote, idx, qid)
 	if err != nil {
 		log.Warn("{DeleteQuizVote} in query: " + queryShiftDownVote)
 		log.Error(err)

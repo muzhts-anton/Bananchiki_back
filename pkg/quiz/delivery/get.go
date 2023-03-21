@@ -133,7 +133,7 @@ func (h *quizHandler) updateQuizVote(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-
+	
 	err = h.QuizUsecase.UpdateQuizVote(q.Quiz.Votes, q.Quiz.Id, q.CreatorId)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

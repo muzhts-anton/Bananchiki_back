@@ -69,11 +69,11 @@ const (
 		option = $1,
 		votes_num = $2,
 		color = $3
-	WHERE idx = $1 AND quiz_id = $5;
+	WHERE idx = $4 AND quiz_id = $5;
 	`
 
 	queryDeleteQuizVote = `
-	DELETE FROM vote WHERE quiz_id = $1 AND idx = $2;
+	DELETE FROM vote WHERE idx = $1 AND quiz_id = $2;
 	`
 
 	queryShiftDownVote = `
