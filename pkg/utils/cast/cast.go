@@ -34,8 +34,8 @@ func ToUint64(src []byte) uint64 {
 	return binary.BigEndian.Uint64(src)
 }
 
-func ToUint32(src []byte) uint32 {
-	return binary.BigEndian.Uint32(src)
+func ToUint16(src []byte) uint16 {
+	return binary.BigEndian.Uint16(src)
 }
 
 func ToFloat64(src []byte) float64 {

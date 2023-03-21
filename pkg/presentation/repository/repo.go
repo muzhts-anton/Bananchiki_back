@@ -59,13 +59,13 @@ func (r *dbPresRepository) CreateCovertedSlides(pid uint64, slides []domain.Conv
 			return err
 		}
 	}
-	
+
 	err = r.dbm.Execute(queryUpdateConvertedSlideNum, len(slides), pid)
-		if err != nil {
-			log.Warn("{CreateCovertedSlides} in query: " + queryUpdateConvertedSlideNum)
-			log.Error(err)
-			return err
-		}
+	if err != nil {
+		log.Warn("{CreateCovertedSlides} in query: " + queryUpdateConvertedSlideNum)
+		log.Error(err)
+		return err
+	}
 
 	return nil
 }
@@ -87,8 +87,8 @@ func (r *dbPresRepository) GetPres(pid uint64) (domain.Presentation, error) {
 		Id:        cast.ToUint64(resp[0][0]),
 		CreatorId: cast.ToUint64(resp[0][1]),
 		Url:       cast.ToString(resp[0][2]),
-		SlideNum:  cast.ToUint32(resp[0][3]),
-		QuizNum:   cast.ToUint32(resp[0][4]),
+		SlideNum:  uint32(cast.ToUint16(resp[0][3])),
+		QuizNum:   uint32(cast.ToUint16(resp[0][4])),
 		Slides:    nil,
 		Quizzes:   nil,
 	}, nil
@@ -105,10 +105,10 @@ func (r *dbPresRepository) GetConvertedSlides(t string, pid uint64) (slides []do
 	slides = make([]domain.ConvertedSlide, 0)
 	for _, slide := range resp {
 		slides = append(slides, domain.ConvertedSlide{
-			Idx:    cast.ToUint32(slide[0]),
+			Idx:    uint32(cast.ToUint16(slide[0])),
 			Name:   cast.ToString(slide[1]),
-			Width:  cast.ToUint32(slide[2]),
-			Height: cast.ToUint32(slide[3]),
+			Width:  uint32(cast.ToUint16(slide[2])),
+			Height: uint32(cast.ToUint16(slide[3])),
 		})
 	}
 
@@ -127,7 +127,7 @@ func (r *dbPresRepository) GetQuizzes(t string, pid uint64) (quizzes []domain.Qu
 	for i, slide := range resp {
 		quizzes = append(quizzes, domain.Quiz{
 			Id:         cast.ToUint64(slide[0]),
-			Idx:        cast.ToUint32(slide[1]),
+			Idx:        uint32(cast.ToUint16(slide[1])),
 			Type:       cast.ToString(slide[2]),
 			Question:   cast.ToString(slide[3]),
 			Background: cast.ToString(slide[4]),
@@ -144,7 +144,7 @@ func (r *dbPresRepository) GetQuizzes(t string, pid uint64) (quizzes []domain.Qu
 		}
 		for _, vote := range tresp {
 			quizzes[i].Votes = append(quizzes[i].Votes, domain.Vote{
-				Idx:    cast.ToUint32(vote[0]),
+				Idx:    uint32(cast.ToUint16(vote[0])),
 				Option: cast.ToString(vote[1]),
 				Votes:  cast.ToUint64(vote[2]),
 				Color:  cast.ToString(vote[3]),
