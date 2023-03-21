@@ -34,7 +34,7 @@ type SlideApiResponse struct {
 	Vote       []Vote `json:"vote"`
 	Background string `json:"background"`
 	FontColor  string `json:"fontColor"`
-	FontSize   uint32 `json:"fontSize"`
+	FontSize   string `json:"fontSize"`
 	GraphColor string `json:"graphColor"`
 }
 

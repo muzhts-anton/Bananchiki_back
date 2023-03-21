@@ -132,7 +132,7 @@ func (r *dbPresRepository) GetQuizzes(t string, pid uint64) (quizzes []domain.Qu
 			Question:   cast.ToString(slide[3]),
 			Background: cast.ToString(slide[4]),
 			FontColor:  cast.ToString(slide[5]),
-			FontSize:   uint32(cast.ToUint16(slide[6])),
+			FontSize:   cast.ToString(slide[6]),
 			GraphColor: cast.ToString(slide[7]),
 		})
 

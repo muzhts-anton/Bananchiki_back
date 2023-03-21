@@ -32,7 +32,7 @@ CREATE TABLE quiz (
     question    VARCHAR(512) NOT NULL,
     background  VARCHAR(16) NOT NULL,
     font_color  VARCHAR(16) NOT NULL,
-    font_size   SMALLINT NOT NULL,
+    font_size   VARCHAR(16) NOT NULL,
     graph_color VARCHAR(16) NOT NULL
 );
 
