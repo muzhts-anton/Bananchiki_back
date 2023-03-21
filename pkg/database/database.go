@@ -66,12 +66,7 @@ func (dbm *DBManager) Query(queryString string, params ...interface{}) ([]DBbyte
 		return nil, err
 	}
 
-	defer func() {
-		err := tx.Rollback(transactionContext)
-		if err != nil {
-			log.Error(err)
-		}
-	}()
+	defer tx.Rollback(transactionContext)
 
 	rows, err := tx.Query(transactionContext, queryString, params...)
 	if err != nil {
@@ -107,12 +102,7 @@ func (dbm *DBManager) Execute(queryString string, params ...interface{}) error {
 		return err
 	}
 
-	defer func() {
-		err := tx.Rollback(transactionContext)
-		if err != nil {
-			log.Error(err)
-		}
-	}()
+	defer tx.Rollback(transactionContext)
 
 	_, err = tx.Exec(transactionContext, queryString, params...)
 	if err != nil {
