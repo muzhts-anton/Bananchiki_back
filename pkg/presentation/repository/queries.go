@@ -2,8 +2,8 @@ package presrep
 
 const (
 	queryCreatePres = `
-	INSERT INTO presentation (creator_id, url)
-	VALUES ($1, $2)
+	INSERT INTO presentation (creator_id, url, converted_slide_num, quiz_num)
+	VALUES ($1, $2, $3, $4)
 	RETURNING id;
 	`
 

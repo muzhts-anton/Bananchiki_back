@@ -2,8 +2,8 @@ package presdel
 
 import (
 	"banana/pkg/domain"
-	"banana/pkg/utils/filesaver"
-	"path/filepath"
+	_ "banana/pkg/utils/filesaver"
+	_ "path/filepath"
 
 	"encoding/json"
 	"net/http"
@@ -13,8 +13,9 @@ import (
 )
 
 const (
-	presentationPath = "/static/presentation/files/"
-	slidesPath       = "/static/presentation/slides/"
+	urlPresentationFilePath   = "/static/presentation/files/"
+	urlMcs                    = "/input_prezentations/"
+	urlPresentationSlidesPath = "/static/presentation/slides/"
 )
 
 // /presentation/{id}
@@ -46,6 +47,7 @@ func (h *presHandler) getPres(w http.ResponseWriter, r *http.Request) {
 
 // /presentation/create
 func (h *presHandler) createPres(w http.ResponseWriter, r *http.Request) {
+/*
 	err := r.ParseMultipartForm(10 * 1024 * 1024) // limit 10Mb
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -59,13 +61,14 @@ func (h *presHandler) createPres(w http.ResponseWriter, r *http.Request) {
 	}
 	defer uploaded.Close()
 
-	filename, err := filesaver.UploadFile(uploaded, presentationPath, filepath.Ext(header.Filename))
+	filename, err := filesaver.UploadFile(uploaded, urlPresentationFilePath, filepath.Ext(header.Filename))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	presId, err := h.PresUsecase.CreatePres(filesaver.RootPath + presentationPath + filename)
+*/
+	filename := "test_prez.pptx"
+	presId, err := h.PresUsecase.CreatePres(urlMcs + filename)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

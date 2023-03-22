@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	RootPath = "/home/ubuntu/banana"
+	RootPath = "/home/banana/Bananchiki_back"
 )
 
 func UploadFile(reader io.Reader, path, ext string) (string, error) {
