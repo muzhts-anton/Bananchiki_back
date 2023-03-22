@@ -14,7 +14,7 @@ import (
 
 const (
 	urlPresentationFilePath   = "/static/presentation/files/"
-	urlMcs                    = "/input_prezentations/"
+	urlMcs                    = "input_prezentations/"
 	urlPresentationSlidesPath = "/static/presentation/slides/"
 )
 
