@@ -2,9 +2,10 @@ package presdel
 
 import (
 	"banana/pkg/domain"
-	_ "banana/pkg/utils/filesaver"
-	_ "path/filepath"
-
+	"banana/pkg/utils/filesaver"
+	"banana/pkg/utils/log"
+	
+	"path/filepath"
 	"encoding/json"
 	"net/http"
 	"strconv"
@@ -47,15 +48,16 @@ func (h *presHandler) getPres(w http.ResponseWriter, r *http.Request) {
 
 // /presentation/create
 func (h *presHandler) createPres(w http.ResponseWriter, r *http.Request) {
-/*
 	err := r.ParseMultipartForm(10 * 1024 * 1024) // limit 10Mb
 	if err != nil {
+		log.Error(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	uploaded, header, err := r.FormFile("presentation")
 	if err != nil {
+		log.Error(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -66,9 +68,8 @@ func (h *presHandler) createPres(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-*/
-	filename := "test_prez.pptx"
-	presId, err := h.PresUsecase.CreatePres(urlMcs + filename)
+
+	presId, err := h.PresUsecase.CreatePres(filename)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

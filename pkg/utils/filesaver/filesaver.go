@@ -18,7 +18,7 @@ func UploadFile(reader io.Reader, path, ext string) (string, error) {
 	randString, err := generateRandomString(6)
 	if err != nil {
 		return "", err
-	}
+	} 
 	filename := randString + ext
 	file, err := createFile(path, filename)
 	if err != nil {
@@ -30,6 +30,7 @@ func UploadFile(reader io.Reader, path, ext string) (string, error) {
 	filename = path + filename
 	_, err = io.Copy(file, reader)
 	if err != nil {
+		log.Error(err)
 		return "", fmt.Errorf("copy error: %s", err)
 	}
 	return filename, nil
@@ -40,6 +41,7 @@ func createFile(dir, name string) (*os.File, error) {
 	if err != nil {
 		err = os.MkdirAll(RootPath+dir, 0777)
 		if err != nil {
+			log.Error(err)
 			return nil, err
 		}
 	}
@@ -54,6 +56,7 @@ func generateRandomString(n uint) (string, error) {
 	for i < n {
 		num, err := rand.Int(rand.Reader, big.NewInt(int64(len(letters))))
 		if err != nil {
+			log.Error(err)
 			return "", err
 		}
 		ret[i] = letters[num.Int64()]
