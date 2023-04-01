@@ -27,12 +27,12 @@ func UploadFile(reader io.Reader, path, ext string) (string, error) {
 	defer file.Close()
 	log.Info("Created file with name " + filename)
 
-	filename = path + filename
 	_, err = io.Copy(file, reader)
 	if err != nil {
 		log.Error(err)
 		return "", fmt.Errorf("copy error: %s", err)
 	}
+	
 	return filename, nil
 }
 

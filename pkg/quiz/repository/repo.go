@@ -107,7 +107,7 @@ func (r *dbQuizRepository) DeleteQuiz(qid, pid uint64) error {
 }
 
 func (r *dbQuizRepository) UpdateQuiz(q domain.Quiz, pid uint64) error {
-	err := r.dbm.Execute(queryUpdateQuiz, q.Question, q.Background, q.FontColor, q.FontSize, q.GraphColor, q.Id)
+	err := r.dbm.Execute(queryUpdateQuiz, q.Question, q.Background, q.FontColor, q.FontSize, q.GraphColor, q.Type, q.Id)
 	if err != nil {
 		log.Warn("{UpdateQuiz} in query: " + queryUpdateQuiz)
 		log.Error(err)

@@ -13,12 +13,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-const (
-	urlPresentationFilePath   = "/static/presentation/files/"
-	urlMcs                    = "input_prezentations/"
-	urlPresentationSlidesPath = "/static/presentation/slides/"
-)
-
 // /presentation/{id}
 func (h *presHandler) getPres(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
@@ -63,7 +57,7 @@ func (h *presHandler) createPres(w http.ResponseWriter, r *http.Request) {
 	}
 	defer uploaded.Close()
 
-	filename, err := filesaver.UploadFile(uploaded, urlPresentationFilePath, filepath.Ext(header.Filename))
+	filename, err := filesaver.UploadFile(uploaded, domain.PresentationFilePath, filepath.Ext(header.Filename))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

@@ -45,7 +45,8 @@ const (
 		font_color = $3,
 		font_size = $4,
 		graph_color = $5
-	WHERE id = $6;
+		type = $6
+	WHERE id = $7;
 	`
 
 	queryIncrementQuizNum = `

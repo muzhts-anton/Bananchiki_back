@@ -5,14 +5,26 @@ const (
 	SlideTypeQuiz           = "question"
 )
 
+const (
+	PresentationFilePath   = "/static/presentation/files/"
+	PresentationSlidesPath = "/static/presentation/slides/"
+)
+
 type Presentation struct {
 	Id        uint64
 	CreatorId uint64
 	Url       string
-	SlideNum  uint32
-	QuizNum   uint32
-	Slides    []ConvertedSlide
-	Quizzes   []Quiz
+
+	Name   string
+	Code   string
+	Hash   string
+	Width  uint32
+	Height uint32
+
+	SlideNum uint32
+	QuizNum  uint32
+	Slides   []ConvertedSlide
+	Quizzes  []Quiz
 }
 
 type ConvertedSlide struct {
@@ -39,6 +51,12 @@ type SlideApiResponse struct {
 }
 
 type PresApiResponse struct {
+	Name   string `json:"name"`
+	Code   string `json:"code"`
+	Hash   string `json:"hash"`
+	Width  uint32 `json:"width"`
+	Height uint32 `json:"height"`
+
 	Url      string             `json:"url"`
 	SlideNum uint32             `json:"slideNum"`
 	QuizNum  uint32             `json:"quizNum"`

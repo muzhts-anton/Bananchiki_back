@@ -18,7 +18,7 @@ func InitPresRep(manager *database.DBManager) domain.PresRepository {
 }
 
 func (r *dbPresRepository) CreatePres(cid uint64) (uint64, error) {
-	resp, err := r.dbm.Query(queryCreatePres, cid, "", 0, 0)
+	resp, err := r.dbm.Query(queryCreatePres, cid, domain.PresentationSlidesPath, 0, 0)
 	if err != nil {
 		log.Warn("{CreatePres} in query: " + queryCreatePres)
 		log.Error(err)

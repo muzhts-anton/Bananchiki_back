@@ -20,7 +20,7 @@ func InitPresUscase(gc grpc.ParsingClient, pr domain.PresRepository) *PresUsecas
 	}
 }
 
-func (pu *PresUsecase) CreatePres(url string) (uint64, error) {
+func (pu *PresUsecase) CreatePres(name string) (uint64, error) {
 	var cid uint64 = 1
 	presId, err := pu.presRepo.CreatePres(cid)
 	if err != nil {
@@ -28,19 +28,19 @@ func (pu *PresUsecase) CreatePres(url string) (uint64, error) {
 	}
 
 	gslides, err := pu.presGrpcClient.Split(context.Background(), &grpc.Pres{
-		Url: url,
+		Name: name,
 		Id:  presId,
 	})
 	if err != nil {
 		log.Error(err)
 	}
 
-	err = pu.presRepo.UpdatePresUrl(presId, gslides.Url)
-	if err != nil {
-		return 0, err
-	}
+	// err = pu.presRepo.UpdatePresUrl(presId, gslides.Url)
+	// if err != nil {
+	// 	return 0, err
+	// }
 
-	slides := make([]domain.ConvertedSlide, 0)
+	slides := make([]domain.ConvertedSlide, gslides.Num)
 	for _, s := range gslides.Slide {
 		slides = append(slides, domain.ConvertedSlide{
 			Name:   s.Name,
@@ -49,7 +49,7 @@ func (pu *PresUsecase) CreatePres(url string) (uint64, error) {
 			Height: s.ImageHeight,
 		})
 	}
-	
+
 	err = pu.presRepo.CreateCovertedSlides(presId, slides)
 	if err != nil {
 		return 0, err
@@ -67,6 +67,10 @@ func (pu *PresUsecase) GetPres(cid, pid uint64) (p domain.PresApiResponse, err e
 	p.QuizNum = pres.QuizNum
 	p.SlideNum = pres.SlideNum
 	p.Url = pres.Url
+	// TODO: implement
+	p.Name = ""
+	p.Code = ""
+	p.Hash = ""
 
 	pres.Slides, err = pu.presRepo.GetConvertedSlides(domain.SildeTypeConvertedSlide, pres.Id)
 	if err != nil {
@@ -107,6 +111,11 @@ func (pu *PresUsecase) GetPres(cid, pid uint64) (p domain.PresApiResponse, err e
 			si++
 		}
 		tmpidx++
+	}
+
+	if p.SlideNum != 0 {
+		p.Width = p.Slides[0].Width
+		p.Height = p.Slides[0].Height
 	}
 
 	return
