@@ -1,7 +1,7 @@
 package quizrep
 
 import (
-	"banana/pkg/database"
+	"banana/pkg/utils/database"
 	"banana/pkg/domain"
 	"banana/pkg/utils/cast"
 	"banana/pkg/utils/log"
@@ -17,6 +17,7 @@ func InitQuizRep(manager *database.DBManager) domain.QuizRepository {
 	}
 }
 
+// quizzes
 func (r *dbQuizRepository) CreateQuiz(q domain.Quiz, pid uint64) (uint64, error) {
 	resp, err := r.dbm.Query(queryCreateQuiz, q.Type, q.Question, q.Background, q.FontColor, q.FontSize, q.GraphColor)
 	if err != nil {
@@ -117,7 +118,7 @@ func (r *dbQuizRepository) UpdateQuiz(q domain.Quiz, pid uint64) error {
 	return nil
 }
 
-//////////////////////////////////
+// votes
 func (r *dbQuizRepository) CreateQuizVote(q domain.Vote, qid uint64) error {
 	err := r.dbm.Execute(queryShiftUpVote, q.Idx, qid)
 	if err != nil {
