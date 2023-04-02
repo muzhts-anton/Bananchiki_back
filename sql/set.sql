@@ -7,7 +7,11 @@ DROP TABLE IF EXISTS vote           CASCADE;
 
 
 CREATE TABLE users (
-    id BIGSERIAL NOT NULL PRIMARY KEY
+    id          BIGSERIAL NOT NULL PRIMARY KEY
+    username    VARCHAR(50) NOT NULL,
+    password    VARCHAR(200) NOT NULL,
+    email       VARCHAR(50) NOT NULL,
+    imgsrc      VARCHAR(50) DEFAULT '/static/userimgs/profile.svg'
 );
 
 CREATE TABLE presentation (
