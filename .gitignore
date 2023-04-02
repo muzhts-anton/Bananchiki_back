@@ -15,7 +15,8 @@
 # vendor/
 
 # Env local
-cs.txt
+cs.md
+notions.md
 logs.txt
 static/
 test*.json

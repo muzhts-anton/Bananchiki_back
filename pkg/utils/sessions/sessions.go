@@ -47,13 +47,7 @@ func FinishSession(w http.ResponseWriter, r *http.Request) error {
 	session.Options.Secure = true
 	session.Options.SameSite = http.SameSiteNoneMode
 
-	err = session.Save(r, w)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return err
-	}
-
-	return nil
+	return session.Save(r, w)
 }
 
 func CheckSession(r *http.Request) (uint64, error) {
