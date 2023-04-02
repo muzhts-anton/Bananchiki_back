@@ -74,5 +74,5 @@ type PresRepository interface {
 
 type PresUsecase interface {
 	GetPres(cid, pid uint64) (PresApiResponse, error)
-	CreatePres(url string) (uint64, error)
+	CreatePres(url string, cid uint64) (uint64, error)
 }

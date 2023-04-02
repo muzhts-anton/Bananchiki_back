@@ -20,8 +20,7 @@ func InitPresUscase(gc grpc.ParsingClient, pr domain.PresRepository) *PresUsecas
 	}
 }
 
-func (pu *PresUsecase) CreatePres(name string) (uint64, error) {
-	var cid uint64 = 1
+func (pu *PresUsecase) CreatePres(name string, cid uint64) (uint64, error) {
 	presId, err := pu.presRepo.CreatePres(cid)
 	if err != nil {
 		return 0, err
@@ -62,6 +61,9 @@ func (pu *PresUsecase) GetPres(cid, pid uint64) (p domain.PresApiResponse, err e
 	pres, err := pu.presRepo.GetPres(pid)
 	if err != nil {
 		return domain.PresApiResponse{}, err
+	}
+	if pres.CreatorId != cid {
+		return domain.PresApiResponse{}, domain.ErrPermissionDenied
 	}
 
 	p.QuizNum = pres.QuizNum

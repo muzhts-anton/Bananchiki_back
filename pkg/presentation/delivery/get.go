@@ -4,10 +4,11 @@ import (
 	"banana/pkg/domain"
 	"banana/pkg/utils/filesaver"
 	"banana/pkg/utils/log"
-	
-	"path/filepath"
+	"banana/pkg/utils/sessions"
+
 	"encoding/json"
 	"net/http"
+	"path/filepath"
 	"strconv"
 
 	"github.com/gorilla/mux"
@@ -22,7 +23,17 @@ func (h *presHandler) getPres(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	pres, err := h.PresUsecase.GetPres(1, presId)
+	usrId, err := sessions.CheckSession(r)
+	if err == domain.ErrUserNotLoggedIn {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	pres, err := h.PresUsecase.GetPres(usrId, presId)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -42,7 +53,17 @@ func (h *presHandler) getPres(w http.ResponseWriter, r *http.Request) {
 
 // /presentation/create
 func (h *presHandler) createPres(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseMultipartForm(10 * 1024 * 1024) // limit 10Mb
+	usrId, err := sessions.CheckSession(r)
+	if err == domain.ErrUserNotLoggedIn {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = r.ParseMultipartForm(10 * 1024 * 1024) // limit 10Mb
 	if err != nil {
 		log.Error(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -63,13 +84,13 @@ func (h *presHandler) createPres(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	presId, err := h.PresUsecase.CreatePres(filename)
+	presId, err := h.PresUsecase.CreatePres(filename, usrId)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	marshalledUs, err := json.Marshal(struct {
+	out, err := json.Marshal(struct {
 		PresId uint64 `json:"presId"`
 	}{PresId: presId})
 	if err != nil {
@@ -78,5 +99,5 @@ func (h *presHandler) createPres(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	w.Write(marshalledUs)
+	w.Write(out)
 }
