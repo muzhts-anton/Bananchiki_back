@@ -13,7 +13,7 @@ import (
 )
 
 func init() {
-	outputStdout := false
+	outputStdout := true
 	zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	if outputStdout {
 		SetOutput(os.Stdout)

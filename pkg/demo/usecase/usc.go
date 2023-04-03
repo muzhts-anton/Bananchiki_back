@@ -39,6 +39,8 @@ func (du demoUsecase) GetCurrentDemoSlide(hash string) (out domain.CurrentDemoSl
 		out.Width = out.Slide.Width
 	}
 
+	out.Url = domain.PresentationSlidesPath
+
 	return
 }
 

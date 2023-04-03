@@ -4,6 +4,7 @@ type CurrentDemoSlide struct {
 	ViewMode bool             `json:"viewMode"`
 	Width    uint32           `json:"width"`
 	Height   uint32           `json:"height"`
+	Url      string           `json:"url"`
 	Slide    SlideApiResponse `json:"slide"`
 }
 
