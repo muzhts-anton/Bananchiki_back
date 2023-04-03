@@ -20,13 +20,13 @@ func (du demoUsecase) GetCurrentDemoSlide(hash string) (out domain.CurrentDemoSl
 		return domain.CurrentDemoSlide{}, err
 	}
 
-	vm, err := du.demoRepo.GetPresViewMode(presId)
+	out.ViewMode, err = du.demoRepo.GetPresViewMode(presId)
 	if err != nil {
 		return domain.CurrentDemoSlide{}, err
 	}
 
-	if vm == false {
-		return domain.CurrentDemoSlide{ViewMode: vm}, nil
+	if out.ViewMode == false {
+		return
 	}
 
 	out.Slide, err = du.demoRepo.GetCurrentDemoSlide(presId)
