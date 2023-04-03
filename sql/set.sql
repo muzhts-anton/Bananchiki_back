@@ -62,10 +62,10 @@ CREATE TABLE presentation (
     name                    VARCHAR(64) DEFAULT 'Temporary presentation name' NOT NULL,
     viewmode                BOOLEAN DEFAULT FALSE NOT NULL,
     code                    VARCHAR(4) UNIQUE DEFAULT unique_random(4, 'presentation', 'code'),
-    demo_idx                SMALLINT NOT NULL,
+    demo_idx                SMALLINT DEFAULT 0 NOT NULL,
     url                     VARCHAR(128) DEFAULT '/static/presentations/' NOT NULL,
-    converted_slide_num     SMALLINT NOT NULL,
-    quiz_num                SMALLINT NOT NULL
+    converted_slide_num     SMALLINT DEFAULT 0 NOT NULL,
+    quiz_num                SMALLINT DEFAULT 0 NOT NULL
 );
 
 CREATE TABLE slideorder (

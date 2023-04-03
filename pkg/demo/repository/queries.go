@@ -25,4 +25,16 @@ const (
 	FROM quiz
 	WHERE id = $1;
 	`
+
+	queryGetCreatorId = `
+	SELECT creator_id FROM presentation WHERE id = $1;
+	`
+
+	queryDemoGo = `
+	UPDATE presentation SET viewmode = true, demo_idx = $1 WHERE id = $2;
+	`
+
+	queryDemoStop = `
+	UPDATE presentation SET viewmode = false WHERE id = $1;
+	`
 )

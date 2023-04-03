@@ -3,6 +3,8 @@ package demodel
 import (
 	"banana/pkg/domain"
 	"banana/pkg/utils/hash"
+	"banana/pkg/utils/sessions"
+	"strconv"
 
 	"encoding/json"
 	"net/http"
@@ -52,4 +54,71 @@ func (handler *demoHandler) ViewDemo(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(out)
+}
+
+// /presentation/{presId}/show/go/{idx}
+func (handler *demoHandler) ShowDemoGo(w http.ResponseWriter, r *http.Request) {
+	presIdStr, ok := mux.Vars(r)["presId"]
+	if !ok {
+		http.Error(w, domain.ErrUrlParameter.Error(), http.StatusBadRequest)
+		return
+	}
+	presId, err := strconv.ParseUint(presIdStr, 10, 64)
+	if err != nil {
+		http.Error(w, domain.ErrUrlParameter.Error(), http.StatusBadRequest)
+		return
+	}
+
+	idxStr, ok := mux.Vars(r)["idx"]
+	if !ok {
+		http.Error(w, domain.ErrUrlParameter.Error(), http.StatusBadRequest)
+		return
+	}
+	idx, err := strconv.ParseUint(idxStr, 10, 32)
+	if err != nil {
+		http.Error(w, domain.ErrUrlParameter.Error(), http.StatusBadRequest)
+		return
+	}
+
+	userId, err := sessions.CheckSession(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = handler.DemoUsecase.ShowDemoGo(presId, userId, uint32(idx))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+// /presentation/{presId}/show/stop
+func (handler *demoHandler) ShowDemoStop(w http.ResponseWriter, r *http.Request) {
+	presIdStr, ok := mux.Vars(r)["presId"]
+	if !ok {
+		http.Error(w, domain.ErrUrlParameter.Error(), http.StatusBadRequest)
+		return
+	}
+	presId, err := strconv.ParseUint(presIdStr, 10, 64)
+	if err != nil {
+		http.Error(w, domain.ErrUrlParameter.Error(), http.StatusBadRequest)
+		return
+	}
+
+	userId, err := sessions.CheckSession(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = handler.DemoUsecase.ShowDemoSop(presId, userId)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }

@@ -94,3 +94,37 @@ func (ur *dbDemoRepository) GetCurrentDemoSlide(pid uint64) (out domain.SlideApi
 
 	return
 }
+
+func (ur *dbDemoRepository) GetPresCreatorId(pid uint64) (uint64, error) {
+	resp, err := ur.dbm.Query(queryGetCreatorId, pid)
+	if err != nil {
+		log.Warn("{GetPresCreatorId} in query: " + queryGetCreatorId)
+		log.Error(err)
+		return 0, err
+	}
+	if len(resp) == 0 {
+		return 0, domain.ErrDatabaseRequest
+	}
+
+	return cast.ToUint64(resp[0][0]), nil
+}
+
+func (ur *dbDemoRepository) DemoGo(pid uint64, idx uint32) error {
+	err := ur.dbm.Execute(queryDemoGo, idx, pid)
+	if err != nil {
+		log.Warn("{DemoGo} in query: " + queryDemoGo)
+		log.Error(err)
+	}
+
+	return err
+}
+
+func (ur *dbDemoRepository) DemoStop(pid uint64) error {
+	err := ur.dbm.Execute(queryDemoStop, pid)
+	if err != nil {
+		log.Warn("{DemoStop} in query: " + queryDemoStop)
+		log.Error(err)
+	}
+
+	return err
+}

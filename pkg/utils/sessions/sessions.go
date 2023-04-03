@@ -19,7 +19,7 @@ func StartSession(w http.ResponseWriter, r *http.Request, id uint64) error {
 	session.Values["id"] = id
 	session.Options = &sessions.Options{
 		MaxAge:   100000,
-		Secure:   true,
+		Secure:   false, // TODO: change when move to https
 		HttpOnly: true,
 		SameSite: http.SameSiteNoneMode,
 		Path:     "/",
@@ -44,7 +44,7 @@ func FinishSession(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	session.Options.MaxAge = -1
-	session.Options.Secure = true
+	session.Options.Secure = false // TODO: change when move to https
 	session.Options.SameSite = http.SameSiteNoneMode
 
 	return session.Save(r, w)

@@ -33,11 +33,37 @@ func (du demoUsecase) GetCurrentDemoSlide(hash string) (out domain.CurrentDemoSl
 	if err != nil {
 		return domain.CurrentDemoSlide{}, err
 	}
-	
+
 	if out.Slide.Kind == domain.SildeTypeConvertedSlide {
 		out.Height = out.Slide.Height
 		out.Width = out.Slide.Width
 	}
 
 	return
+}
+
+func (du demoUsecase) ShowDemoGo(presId, userId uint64, idx uint32) error {
+	cid, err := du.demoRepo.GetPresCreatorId(presId)
+	if err != nil {
+		return err
+	}
+
+	if cid != userId {
+		return domain.ErrPermissionDenied
+	}
+
+	return du.demoRepo.DemoGo(presId, idx)
+}
+
+func (du demoUsecase) ShowDemoSop(presId, userId uint64) error {
+	cid, err := du.demoRepo.GetPresCreatorId(presId)
+	if err != nil {
+		return err
+	}
+
+	if cid != userId {
+		return domain.ErrPermissionDenied
+	}
+
+	return du.demoRepo.DemoStop(presId)
 }

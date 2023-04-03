@@ -17,4 +17,6 @@ func SetAuthHandlers(router *mux.Router, au domain.DemoUsecase) {
 
 	router.HandleFunc(urlViewJoin, handler.JoinDemo).Methods("GET", "OPTIONS")
 	router.HandleFunc(urlView, handler.ViewDemo).Methods("GET", "OPTIONS")
+	router.HandleFunc(urlShowGo, handler.ShowDemoGo).Methods("PUT", "OPTIONS")
+	router.HandleFunc(urlShowStop, handler.ShowDemoStop).Methods("PUT", "OPTIONS")
 }
