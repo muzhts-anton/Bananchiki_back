@@ -1,4 +1,4 @@
-package autrep
+package authrep
 
 import (
 	"banana/pkg/domain"
@@ -13,7 +13,7 @@ type dbAuthRepository struct {
 	dbm *database.DBManager
 }
 
-func InitAutRep(manager *database.DBManager) domain.AuthRepository {
+func InitAuthRep(manager *database.DBManager) domain.AuthRepository {
 	return &dbAuthRepository{
 		dbm: manager,
 	}

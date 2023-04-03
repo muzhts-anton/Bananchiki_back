@@ -1,4 +1,4 @@
-package autusc
+package authusc
 
 import (
 	"banana/pkg/domain"

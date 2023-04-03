@@ -1,4 +1,4 @@
-package autrep
+package authrep
 
 const (
 	queryGetByEmail = `

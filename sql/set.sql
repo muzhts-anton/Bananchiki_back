@@ -49,7 +49,7 @@ end;
 $$ language plpgsql;
 
 CREATE TABLE users (
-    id          BIGSERIAL NOT NULL PRIMARY KEY
+    id          BIGSERIAL NOT NULL PRIMARY KEY,
     username    VARCHAR(50) NOT NULL,
     password    VARCHAR(200) NOT NULL,
     email       VARCHAR(50) NOT NULL,
@@ -60,7 +60,9 @@ CREATE TABLE presentation (
     id                      BIGSERIAL NOT NULL PRIMARY KEY,
     creator_id              BIGINT REFERENCES users (id),
     name                    VARCHAR(64) DEFAULT 'Temporary presentation name' NOT NULL,
+    viewmode                BOOLEAN DEFAULT FALSE NOT NULL,
     code                    VARCHAR(4) UNIQUE DEFAULT unique_random(4, 'presentation', 'code'),
+    demo_idx                SMALLINT NOT NULL,
     url                     VARCHAR(128) DEFAULT '/static/presentations/' NOT NULL,
     converted_slide_num     SMALLINT NOT NULL,
     quiz_num                SMALLINT NOT NULL

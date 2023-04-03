@@ -10,7 +10,7 @@ type authHandler struct {
 	AuthUsecase domain.AuthUsecase
 }
 
-func SetAutHandlers(router *mux.Router, au domain.AuthUsecase) {
+func SetAuthHandlers(router *mux.Router, au domain.AuthUsecase) {
 	handler := &authHandler{
 		au,
 	}

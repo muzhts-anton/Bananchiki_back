@@ -7,6 +7,7 @@ var (
 	ErrDatabaseRange   = errors.New("Index out of database")
 	ErrUrlParameter    = errors.New("Error while parsing url parameter")
 	ErrInternalServer  = errors.New("Internal server error")
+	ErrCodeNotFound    = errors.New("No presentation with requested code")
 
 	ErrPermissionDenied = errors.New("Permission Denied")
 

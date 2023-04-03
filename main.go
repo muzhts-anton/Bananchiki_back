@@ -10,6 +10,10 @@ import (
 	"banana/pkg/quiz/repository"
 	"banana/pkg/quiz/usecase"
 
+	"banana/pkg/auth/delivery"
+	"banana/pkg/auth/repository"
+	"banana/pkg/auth/usecase"
+
 	"banana/pkg/presentation/delivery"
 	"banana/pkg/presentation/repository"
 	"banana/pkg/presentation/usecase"
@@ -36,6 +40,10 @@ func main() {
 	quizRep := quizrep.InitQuizRep(db)
 	quizUsc := quizusc.InitQuizUsc(quizRep)
 	quizdel.SetQuizHandlers(api, quizUsc)
+
+	authRep := authrep.InitAuthRep(db)
+	authUsc := authusc.InitAuthUsc(authRep)
+	authdel.SetAuthHandlers(api, authUsc)
 
 	conn, _ := grpc.Dial(":50051", grpc.WithInsecure())
 	c := presgrpc.NewParsingClient(conn)

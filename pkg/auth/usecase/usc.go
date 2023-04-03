@@ -1,4 +1,4 @@
-package autusc
+package authusc
 
 import (
 	"banana/pkg/domain"
@@ -10,7 +10,7 @@ type authUsecase struct {
 	authRepo domain.AuthRepository
 }
 
-func InitAutUsc(ar domain.AuthRepository) domain.AuthUsecase {
+func InitAuthUsc(ar domain.AuthRepository) domain.AuthUsecase {
 	return &authUsecase{
 		authRepo: ar,
 	}
