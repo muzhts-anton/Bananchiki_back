@@ -18,6 +18,10 @@ import (
 	"banana/pkg/presentation/repository"
 	"banana/pkg/presentation/usecase"
 
+	"banana/pkg/demo/delivery"
+	"banana/pkg/demo/repository"
+	"banana/pkg/demo/usecase"
+
 	"github.com/gorilla/mux"
 	"google.golang.org/grpc"
 
@@ -44,6 +48,10 @@ func main() {
 	authRep := authrep.InitAuthRep(db)
 	authUsc := authusc.InitAuthUsc(authRep)
 	authdel.SetAuthHandlers(api, authUsc)
+
+	demoRep := demorep.InitDemoRep(db)
+	demoUsc := demousc.InitDemoUsc(demoRep)
+	demodel.SetAuthHandlers(api, demoUsc)
 
 	conn, _ := grpc.Dial(":50051", grpc.WithInsecure())
 	c := presgrpc.NewParsingClient(conn)
