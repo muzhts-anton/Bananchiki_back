@@ -1,9 +1,9 @@
 package presrep
 
 import (
-	"banana/pkg/utils/database"
 	"banana/pkg/domain"
 	"banana/pkg/utils/cast"
+	"banana/pkg/utils/database"
 	"banana/pkg/utils/log"
 )
 
@@ -87,8 +87,10 @@ func (r *dbPresRepository) GetPres(pid uint64) (domain.Presentation, error) {
 		Id:        cast.ToUint64(resp[0][0]),
 		CreatorId: cast.ToUint64(resp[0][1]),
 		Url:       cast.ToString(resp[0][2]),
-		SlideNum:  uint32(cast.ToUint16(resp[0][3])),
-		QuizNum:   uint32(cast.ToUint16(resp[0][4])),
+		Name:      cast.ToString(resp[0][3]),
+		Code:      cast.ToString(resp[0][4]),
+		SlideNum:  uint32(cast.ToUint16(resp[0][5])),
+		QuizNum:   uint32(cast.ToUint16(resp[0][6])),
 		Slides:    nil,
 		Quizzes:   nil,
 	}, nil

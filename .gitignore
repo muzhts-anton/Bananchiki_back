@@ -21,3 +21,4 @@ logs.txt
 static/
 test*.json
 backupbins/
+prez_parce_logs/

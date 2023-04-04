@@ -44,7 +44,7 @@ const (
 		background = $2,
 		font_color = $3,
 		font_size = $4,
-		graph_color = $5
+		graph_color = $5,
 		type = $6
 	WHERE id = $7;
 	`

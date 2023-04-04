@@ -3,6 +3,7 @@ package presusc
 import (
 	"banana/pkg/domain"
 	"banana/pkg/presentation/delivery/grpc"
+	"banana/pkg/utils/hash"
 	"banana/pkg/utils/log"
 
 	"context"
@@ -28,7 +29,7 @@ func (pu *PresUsecase) CreatePres(name string, cid uint64) (uint64, error) {
 
 	gslides, err := pu.presGrpcClient.Split(context.Background(), &grpc.Pres{
 		Name: name,
-		Id:  presId,
+		Id:   presId,
 	})
 	if err != nil {
 		log.Error(err)
@@ -39,7 +40,7 @@ func (pu *PresUsecase) CreatePres(name string, cid uint64) (uint64, error) {
 	// 	return 0, err
 	// }
 
-	slides := make([]domain.ConvertedSlide, gslides.Num)
+	slides := make([]domain.ConvertedSlide, 0, gslides.Num)
 	for _, s := range gslides.Slide {
 		slides = append(slides, domain.ConvertedSlide{
 			Name:   s.Name,
@@ -69,10 +70,9 @@ func (pu *PresUsecase) GetPres(cid, pid uint64) (p domain.PresApiResponse, err e
 	p.QuizNum = pres.QuizNum
 	p.SlideNum = pres.SlideNum
 	p.Url = pres.Url
-	// TODO: implement
-	p.Name = ""
-	p.Code = ""
-	p.Hash = ""
+	p.Code = pres.Code
+	p.Name = pres.Name
+	p.Hash = hash.EncodeToHash(p.Code)
 
 	pres.Slides, err = pu.presRepo.GetConvertedSlides(domain.SildeTypeConvertedSlide, pres.Id)
 	if err != nil {

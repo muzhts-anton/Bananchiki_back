@@ -29,7 +29,7 @@ const (
 
 const (
 	queryGetPres = `
-	SELECT id, creator_id, url, converted_slide_num, quiz_num
+	SELECT id, creator_id, url, name, code, converted_slide_num, quiz_num
 	FROM presentation
 	WHERE id = $1;
 	`
