@@ -167,3 +167,28 @@ func (h *quizHandler) createQuizVote(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 }
+
+// /quiz/vote/poll
+func (h *quizHandler) pollQuizVote(w http.ResponseWriter, r *http.Request) {
+	b, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	var q domain.VoteHTTP
+	err = json.Unmarshal(b, &q)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = h.QuizUsecase.PollQuizVote(q.Vote.Idx, q.QuizId)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}

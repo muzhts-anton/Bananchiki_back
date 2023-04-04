@@ -45,3 +45,7 @@ func (u *quizUsecase) UpdateQuizVote(q []domain.Vote, qid, cid uint64) (err erro
 func (u *quizUsecase) DeleteQuizVote(idx uint32, qid, cid uint64) error {
 	return u.quizRepo.DeleteQuizVote(idx, qid)
 }
+
+func (u *quizUsecase) PollQuizVote(idx uint32, qid uint64) error {
+	return u.quizRepo.PollQuizVote(idx, qid)
+}

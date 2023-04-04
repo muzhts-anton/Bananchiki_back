@@ -47,6 +47,7 @@ type QuizRepository interface {
 	CreateQuizVote(q Vote, qid uint64) error
 	UpdateQuizVote(q Vote, qid uint64) error
 	DeleteQuizVote(idx uint32, qid uint64) error
+	PollQuizVote(idx uint32, qid uint64) error
 }
 
 type QuizUsecase interface {
@@ -56,4 +57,5 @@ type QuizUsecase interface {
 	CreateQuizVote(q Vote, qid, cid uint64) error
 	UpdateQuizVote(q []Vote, qid, cid uint64) error
 	DeleteQuizVote(idx uint32, qid, cid uint64) error
+	PollQuizVote(idx uint32, qid uint64) error
 }

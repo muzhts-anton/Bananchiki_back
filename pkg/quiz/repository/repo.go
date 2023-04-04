@@ -1,9 +1,9 @@
 package quizrep
 
 import (
-	"banana/pkg/utils/database"
 	"banana/pkg/domain"
 	"banana/pkg/utils/cast"
+	"banana/pkg/utils/database"
 	"banana/pkg/utils/log"
 )
 
@@ -23,7 +23,7 @@ func (r *dbQuizRepository) CreateQuiz(q domain.Quiz, pid uint64) (uint64, error)
 	if err != nil {
 		log.Warn("{CreateQuiz} in query: " + queryCreateQuiz)
 		log.Error(err)
-		return 0, domain.ErrDatabaseRequest
+		return 0, err
 	}
 	if len(resp) == 0 {
 		log.Warn("{CreateQuiz}")
@@ -37,21 +37,21 @@ func (r *dbQuizRepository) CreateQuiz(q domain.Quiz, pid uint64) (uint64, error)
 	if err != nil {
 		log.Warn("{CreateQuiz} in query: " + queryShiftUpIdxs)
 		log.Error(err)
-		return 0, domain.ErrDatabaseRequest
+		return 0, err
 	}
 
 	err = r.dbm.Execute(queryInsertQuiz, pid, domain.SlideTypeQuiz, q.Id, q.Idx)
 	if err != nil {
 		log.Warn("{CreateQuiz} in query: " + queryInsertQuiz)
 		log.Error(err)
-		return 0, domain.ErrDatabaseRequest
+		return 0, err
 	}
 
 	err = r.dbm.Execute(queryIncrementQuizNum, pid)
 	if err != nil {
 		log.Warn("{CreateQuiz} in query: " + queryIncrementQuizNum)
 		log.Error(err)
-		return 0, domain.ErrDatabaseRequest
+		return 0, err
 	}
 
 	return q.Id, nil
@@ -62,7 +62,7 @@ func (r *dbQuizRepository) DeleteQuiz(qid, pid uint64) error {
 	if err != nil {
 		log.Warn("{DeleteQuiz} in query: " + queryDeleteQuiz)
 		log.Error(err)
-		return domain.ErrDatabaseRequest
+		return err
 	}
 	if len(resp) == 0 {
 		log.Error(domain.ErrDatabaseRequest)
@@ -73,35 +73,35 @@ func (r *dbQuizRepository) DeleteQuiz(qid, pid uint64) error {
 	if err != nil {
 		log.Warn("{DeleteQuiz} in query: " + queryDeleteVotes)
 		log.Error(err)
-		return domain.ErrDatabaseRequest
+		return err
 	}
 
 	err = r.dbm.Execute(queryDeleteQuiz, qid)
 	if err != nil {
 		log.Warn("{DeleteQuiz} in query: " + queryDeleteQuiz)
 		log.Error(err)
-		return domain.ErrDatabaseRequest
+		return err
 	}
 
 	err = r.dbm.Execute(queryCutQuiz, domain.SlideTypeQuiz, qid)
 	if err != nil {
 		log.Warn("{DeleteQuiz} in query: " + queryCutQuiz)
 		log.Error(err)
-		return domain.ErrDatabaseRequest
+		return err
 	}
 
 	err = r.dbm.Execute(queryShiftDownIdxs, cast.ToUint16(resp[0][0]), pid)
 	if err != nil {
 		log.Warn("{DeleteQuiz} in query: " + queryShiftDownIdxs)
 		log.Error(err)
-		return domain.ErrDatabaseRequest
+		return err
 	}
 
 	err = r.dbm.Execute(queryDecrementQuizNum, pid)
 	if err != nil {
 		log.Warn("{CreateQuiz} in query: " + queryDecrementQuizNum)
 		log.Error(err)
-		return domain.ErrDatabaseRequest
+		return err
 	}
 
 	return nil
@@ -112,7 +112,7 @@ func (r *dbQuizRepository) UpdateQuiz(q domain.Quiz, pid uint64) error {
 	if err != nil {
 		log.Warn("{UpdateQuiz} in query: " + queryUpdateQuiz)
 		log.Error(err)
-		return domain.ErrDatabaseRequest
+		return err
 	}
 
 	return nil
@@ -124,14 +124,14 @@ func (r *dbQuizRepository) CreateQuizVote(q domain.Vote, qid uint64) error {
 	if err != nil {
 		log.Warn("{CreateQuizVote} in query: " + queryShiftUpVote)
 		log.Error(err)
-		return domain.ErrDatabaseRequest
+		return err
 	}
 
 	err = r.dbm.Execute(queryCreateQuizVote, qid, q.Idx, q.Option, q.Votes, q.Color)
 	if err != nil {
 		log.Warn("{CreateQuizVote} in query: " + queryCreateQuizVote)
 		log.Error(err)
-		return domain.ErrDatabaseRequest
+		return err
 	}
 
 	return nil
@@ -142,7 +142,7 @@ func (r *dbQuizRepository) UpdateQuizVote(q domain.Vote, qid uint64) error {
 	if err != nil {
 		log.Warn("{UpdateQuizVote} in query: " + queryUpdateQuizVote)
 		log.Error(err)
-		return domain.ErrDatabaseRequest
+		return err
 	}
 
 	return nil
@@ -153,14 +153,25 @@ func (r *dbQuizRepository) DeleteQuizVote(idx uint32, qid uint64) error {
 	if err != nil {
 		log.Warn("{DeleteQuizVote} in query: " + queryDeleteQuizVote)
 		log.Error(err)
-		return domain.ErrDatabaseRequest
+		return err
 	}
 
 	err = r.dbm.Execute(queryShiftDownVote, idx, qid)
 	if err != nil {
 		log.Warn("{DeleteQuizVote} in query: " + queryShiftDownVote)
 		log.Error(err)
-		return domain.ErrDatabaseRequest
+		return err
+	}
+
+	return nil
+}
+
+func (r *dbQuizRepository) PollQuizVote(idx uint32, qid uint64) error {
+	err := r.dbm.Execute(queryPollQuizVote, idx, qid)
+	if err != nil {
+		log.Warn("{PollQuizVote} in query: " + queryPollQuizVote)
+		log.Error(err)
+		return err
 	}
 
 	return nil

@@ -84,4 +84,8 @@ const (
 	queryShiftUpVote = `
 	UPDATE vote SET idx = idx + 1 WHERE idx >= $1 AND quiz_id = $2;
 	`
+
+	queryPollQuizVote = `
+	UPDATE vote SET votes_num = votes_num + 1 WHERE quiz_id = $1 AND idx = $2;
+	`
 )
