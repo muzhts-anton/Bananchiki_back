@@ -90,6 +90,21 @@ func (ur *dbDemoRepository) GetCurrentDemoSlide(pid uint64) (out domain.SlideApi
 		out.FontColor = cast.ToString(resp[0][4])
 		out.FontSize = cast.ToString(resp[0][5])
 		out.GraphColor = cast.ToString(resp[0][6])
+
+		out.Vote = make([]domain.Vote, 0)
+		tresp, terr := ur.dbm.Query(queryGetVotes, itemId)
+		if terr != nil {
+			log.Warn("{GetCurrentDemoSlide} in query: " + queryGetVotes)
+			log.Error(err)
+		}
+		for _, vote := range tresp {
+			out.Vote = append(out.Vote, domain.Vote{
+				Idx:    uint32(cast.ToUint16(vote[0])),
+				Option: cast.ToString(vote[1]),
+				Votes:  cast.ToUint64(vote[2]),
+				Color:  cast.ToString(vote[3]),
+			})
+		}
 	}
 
 	return

@@ -30,6 +30,13 @@ const (
 	SELECT creator_id FROM presentation WHERE id = $1;
 	`
 
+	queryGetVotes = `
+	SELECT idx, option, votes_num, color
+	FROM vote
+	WHERE quiz_id = $1
+	ORDER BY idx;
+	`
+
 	queryDemoGo = `
 	UPDATE presentation SET viewmode = true, demo_idx = $1 WHERE id = $2;
 	`

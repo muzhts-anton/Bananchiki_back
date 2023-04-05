@@ -167,7 +167,7 @@ func (r *dbQuizRepository) DeleteQuizVote(idx uint32, qid uint64) error {
 }
 
 func (r *dbQuizRepository) PollQuizVote(idx uint32, qid uint64) error {
-	err := r.dbm.Execute(queryPollQuizVote, idx, qid)
+	err := r.dbm.Execute(queryPollQuizVote, qid, idx)
 	if err != nil {
 		log.Warn("{PollQuizVote} in query: " + queryPollQuizVote)
 		log.Error(err)
