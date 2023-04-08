@@ -71,5 +71,11 @@ func (du demoUsecase) ShowDemoSop(presId, userId uint64) error {
 		return domain.ErrPermissionDenied
 	}
 
+	//обнулить презентации
+	err = du.demoRepo.ZeroingReactions(presId)
+	if err != nil{
+		return err
+	}
+
 	return du.demoRepo.DemoStop(presId)
 }

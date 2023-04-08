@@ -50,4 +50,16 @@ const (
 	queryDemoStop = `
 	UPDATE presentation SET viewmode = false WHERE id = $1;
 	`
+
+	//нужно написать запрос на обнуление реакций
+	queryZeroingReations = `
+	UPDATE presentation
+	SET
+		emotion_like = 0,
+		emotion_love = 0,
+		emotion_laughter = 0,
+		emotion_surprise = 0,
+		emotion_sad = 0
+	WHERE id = $1;
+	`
 )

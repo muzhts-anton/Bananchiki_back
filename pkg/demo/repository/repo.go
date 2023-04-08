@@ -163,3 +163,16 @@ func (ur *dbDemoRepository) GetPresEmotions(pid uint64) (domain.PresEmotions, er
 		Sad:      cast.ToUint64(resp[0][4]),
 	}, nil
 }
+
+// функция  для обнуления реакций
+func (ur *dbDemoRepository) ZeroingReactions(pid uint64) error{
+	// дописать
+	resp, err := ur.dbm.Query(queryZeroingReations, pid)
+	if err != nil {
+		log.Warn("{GetPresEmotions} in query: " + queryGetPresEmotions)
+		log.Error(err)
+		return err
+	}
+	
+	return nil
+}
