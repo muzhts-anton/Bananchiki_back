@@ -36,7 +36,7 @@ func (ur *dbReacRepository) GetPresIdByHash(h string) (uint64, error) {
 }
 
 func (ur *dbReacRepository) ReactionsUpd(pid uint64, emo domain.PresEmotions) error {
-	err := ur.dbm.Execute(queryUpdEmotions, pid)
+	err := ur.dbm.Execute(queryUpdEmotions, emo.Like, emo.Love, emo.Laughter, emo.Surprise, emo.Sad, pid)
 	if err != nil {
 		log.Warn("{ReactionsUpd} in query: " + queryUpdEmotions)
 		log.Error(err)
