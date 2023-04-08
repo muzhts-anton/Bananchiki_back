@@ -65,7 +65,12 @@ CREATE TABLE presentation (
     demo_idx                SMALLINT DEFAULT 0 NOT NULL,
     url                     VARCHAR(128) DEFAULT '/static/presentations/' NOT NULL,
     converted_slide_num     SMALLINT DEFAULT 0 NOT NULL,
-    quiz_num                SMALLINT DEFAULT 0 NOT NULL
+    quiz_num                SMALLINT DEFAULT 0 NOT NULL,
+    emotion_like            BIGINT DEFAULT 0 NOT NULL,
+    emotion_love            BIGINT DEFAULT 0 NOT NULL,
+    emotion_laughter        BIGINT DEFAULT 0 NOT NULL,
+    emotion_surprise        BIGINT DEFAULT 0 NOT NULL,
+    emotion_sad             BIGINT DEFAULT 0 NOT NULL
 );
 
 CREATE TABLE slideorder (

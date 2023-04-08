@@ -143,3 +143,23 @@ func (ur *dbDemoRepository) DemoStop(pid uint64) error {
 
 	return err
 }
+
+func (ur *dbDemoRepository) GetPresEmotions(pid uint64) (domain.PresEmotions, error) {
+	resp, err := ur.dbm.Query(queryGetPresEmotions, pid)
+	if err != nil {
+		log.Warn("{GetPresEmotions} in query: " + queryGetPresEmotions)
+		log.Error(err)
+		return domain.PresEmotions{}, err
+	}
+	if len(resp) == 0 {
+		return domain.PresEmotions{}, domain.ErrDatabaseRequest
+	}
+
+	return domain.PresEmotions{
+		Like:     cast.ToUint64(resp[0][0]),
+		Love:     cast.ToUint64(resp[0][1]),
+		Laughter: cast.ToUint64(resp[0][2]),
+		Surprise: cast.ToUint64(resp[0][3]),
+		Sad:      cast.ToUint64(resp[0][4]),
+	}, nil
+}

@@ -40,7 +40,10 @@ func (du demoUsecase) GetCurrentDemoSlide(hash string) (out domain.CurrentDemoSl
 		out.Url = domain.PresentationSlidesPath
 	}
 
-	
+	out.Emotions, err = du.demoRepo.GetPresEmotions(presId)
+	if err != nil {
+		return domain.CurrentDemoSlide{}, err
+	}
 
 	return
 }

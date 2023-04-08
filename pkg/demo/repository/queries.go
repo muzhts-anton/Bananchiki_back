@@ -16,6 +16,12 @@ const (
 	WHERE presentation.id = $1 AND slideorder.idx = presentation.demo_idx;
 	`
 
+	queryGetPresEmotions = `
+	SELECT emotion_like, emotion_love, emotion_laughter, emotion_surprise, emotion_sad
+	FROM presentation
+	WHERE id = $1;
+	`
+
 	queryGetConvertedSlide = `
 	SELECT name, width, height FROM convertedslide WHERE id = $1;
 	`
