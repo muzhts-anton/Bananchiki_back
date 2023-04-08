@@ -58,6 +58,11 @@ func (du demoUsecase) ShowDemoGo(presId, userId uint64, idx uint32) error {
 		return domain.ErrPermissionDenied
 	}
 
+	err = du.demoRepo.SetAllVotes(presId, 0)
+	if err != nil {
+		return err
+	}
+
 	return du.demoRepo.DemoGo(presId, idx)
 }
 
@@ -73,7 +78,12 @@ func (du demoUsecase) ShowDemoSop(presId, userId uint64) error {
 
 	//обнулить презентации
 	err = du.demoRepo.ZeroingReactions(presId)
-	if err != nil{
+	if err != nil {
+		return err
+	}
+
+	err = du.demoRepo.SetAllVotes(presId, 1)
+	if err != nil {
 		return err
 	}
 

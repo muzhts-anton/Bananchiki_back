@@ -62,4 +62,15 @@ const (
 		emotion_sad = 0
 	WHERE id = $1;
 	`
+
+	querySetAllVotes = `
+	UPDATE vote
+	SET
+		vote.votes=$2
+	FROM vote
+	JOIN quiz ON quiz.id = vote.quizId
+	JOIN slideOrder ON slideOrder.item_id = quiz.id AND slideOrder.type="question" 
+	JOIN presentation ON presentation.id = slideOrder.presentation_id
+	WHERE presentation.id = $1;
+	`
 )

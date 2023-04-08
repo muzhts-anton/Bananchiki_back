@@ -23,5 +23,6 @@ type DemoRepository interface {
 	DemoGo(pid uint64, idx uint32) error
 	DemoStop(pid uint64) error
 	GetPresEmotions(pid uint64) (PresEmotions, error)
-	ZeroingReactions(pid uint64) error //обнуление презентаций
+	ZeroingReactions(pid uint64) error // обнуление презентаций
+	SetAllVotes(pid uint64, value int) error // выставить все votes равному value
 }

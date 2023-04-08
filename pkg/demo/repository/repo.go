@@ -169,7 +169,19 @@ func (ur *dbDemoRepository) ZeroingReactions(pid uint64) error{
 	// дописать
 	err := ur.dbm.Execute(queryZeroingReations, pid)
 	if err != nil {
-		log.Warn("{ZeroingReactions} in query: " + queryGetPresEmotions)
+		log.Warn("{ZeroingReactions} in query: " + queryZeroingReations)
+		log.Error(err)
+		return err
+	}
+	
+	return nil
+}
+
+func (ur *dbDemoRepository) SetAllVotes(pid uint64, value int) error{
+	// дописать
+	err := ur.dbm.Execute(querySetAllVotes, pid, value)
+	if err != nil {
+		log.Warn("{setAllVotes} in query: " + queryGetPresEmotions)
 		log.Error(err)
 		return err
 	}
