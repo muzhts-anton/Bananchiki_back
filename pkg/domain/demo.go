@@ -1,12 +1,13 @@
 package domain
 
 type CurrentDemoSlide struct {
-	ViewMode bool             `json:"viewMode"`
-	Width    uint32           `json:"width"`
-	Height   uint32           `json:"height"`
-	Url      string           `json:"url"`
-	Emotions PresEmotions     `json:"emotions"`
-	Slide    SlideApiResponse `json:"slide"`
+	ViewMode  bool             `json:"viewMode"`
+	Width     uint32           `json:"width"`
+	Height    uint32           `json:"height"`
+	Url       string           `json:"url"`
+	Emotions  PresEmotions     `json:"emotions"`
+	Questions []Question       `json:"questions"`
+	Slide     SlideApiResponse `json:"slide"`
 }
 
 type DemoUsecase interface {
@@ -23,4 +24,5 @@ type DemoRepository interface {
 	DemoGo(pid uint64, idx uint32) error
 	DemoStop(pid uint64) error
 	GetPresEmotions(pid uint64) (PresEmotions, error)
+	GetPresQuestions(pid uint64) ([]Question, error)
 }

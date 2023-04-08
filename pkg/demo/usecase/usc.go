@@ -45,6 +45,11 @@ func (du demoUsecase) GetCurrentDemoSlide(hash string) (out domain.CurrentDemoSl
 		return domain.CurrentDemoSlide{}, err
 	}
 
+	out.Questions, err = du.demoRepo.GetPresQuestions(presId)
+	if err != nil {
+		return domain.CurrentDemoSlide{}, err
+	}
+
 	return
 }
 

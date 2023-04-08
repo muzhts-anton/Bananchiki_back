@@ -22,3 +22,12 @@ func (du reacUsecase) ReactionsUpd(emo domain.ReactionsApi) error {
 
 	return du.reacRepo.ReactionsUpd(presId, emo.Emotions)
 }
+
+func (du reacUsecase) QuestionAsk(h string, q domain.Question) error {
+	presId, err := du.reacRepo.GetPresIdByHash(h)
+	if err != nil {
+		return err
+	}
+
+	return du.reacRepo.QuestionAsk(presId, q)
+}

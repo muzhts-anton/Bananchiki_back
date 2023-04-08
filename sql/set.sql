@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS slideorder     CASCADE;
 DROP TABLE IF EXISTS quiz           CASCADE;
 DROP TABLE IF EXISTS convertedslide CASCADE;
 DROP TABLE IF EXISTS vote           CASCADE;
+DROP TABLE IF EXISTS question       CASCADE;
 
 DROP FUNCTION IF EXISTS gen_random_bytes;
 DROP FUNCTION IF EXISTS random_string;
@@ -105,5 +106,13 @@ CREATE TABLE vote (
     option      VARCHAR(512) NOT NULL,
     votes_num   BIGINT NOT NULL,
     color       VARCHAR(16) NOT NULL
+);
+
+CREATE TABLE question (
+    id              BIGSERIAL NOT NULL PRIMARY KEY,
+    presentation_id BIGINT REFERENCES presentation (id),
+    idx             SMALLINT DEFAULT 0 NOT NULL,
+    option          VARCHAR(512) NOT NULL,
+    likes           BIGINT DEFAULT 0 NOT NULL
 );
 

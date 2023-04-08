@@ -44,3 +44,13 @@ func (ur *dbReacRepository) ReactionsUpd(pid uint64, emo domain.PresEmotions) er
 
 	return err
 }
+
+func (ur *dbReacRepository) QuestionAsk(pid uint64, q domain.Question) error {
+	err := ur.dbm.Execute(queryQuestionAsk, pid, q.Idx, q.Option, q.Likes)
+	if err != nil {
+		log.Warn("{QuestionAsk} in query: " + queryQuestionAsk)
+		log.Error(err)
+	}
+
+	return err
+}

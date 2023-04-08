@@ -50,4 +50,8 @@ const (
 	queryDemoStop = `
 	UPDATE presentation SET viewmode = false WHERE id = $1;
 	`
+
+	queryGetPresQuestions = `
+	SELECT idx, option, likes FROM question WHERE presentation_id = $1;
+	`
 )

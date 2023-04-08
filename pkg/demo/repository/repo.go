@@ -163,3 +163,23 @@ func (ur *dbDemoRepository) GetPresEmotions(pid uint64) (domain.PresEmotions, er
 		Sad:      cast.ToUint64(resp[0][4]),
 	}, nil
 }
+
+func (ur *dbDemoRepository) GetPresQuestions(pid uint64) ([]domain.Question, error) {
+	resp, err := ur.dbm.Query(queryGetPresQuestions, pid)
+	if err != nil {
+		log.Warn("{GetPresQuestions} in query: " + queryGetPresQuestions)
+		log.Error(err)
+		return nil, err
+	}
+
+	out := make([]domain.Question, 0)
+	for _, q := range resp {
+		out = append(out, domain.Question{
+			Idx:    cast.ToUint64(q[0]),
+			Option: cast.ToString(q[1]),
+			Likes:  cast.ToUint64(q[2]),
+		})
+	}
+
+	return out, nil
+}

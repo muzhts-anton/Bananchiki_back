@@ -15,4 +15,8 @@ const (
 		emotion_sad = $5
 	WHERE id = $6;
 	`
+
+	queryQuestionAsk = `
+	INSERT INTO question (presentation_id, idx, option, likes) VALUES ($1, $2, $3, $4);
+	`
 )
