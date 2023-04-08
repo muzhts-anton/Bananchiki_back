@@ -167,9 +167,9 @@ func (ur *dbDemoRepository) GetPresEmotions(pid uint64) (domain.PresEmotions, er
 // функция  для обнуления реакций
 func (ur *dbDemoRepository) ZeroingReactions(pid uint64) error{
 	// дописать
-	resp, err := ur.dbm.Query(queryZeroingReations, pid)
+	err := ur.dbm.Execute(queryZeroingReations, pid)
 	if err != nil {
-		log.Warn("{GetPresEmotions} in query: " + queryGetPresEmotions)
+		log.Warn("{ZeroingReactions} in query: " + queryGetPresEmotions)
 		log.Error(err)
 		return err
 	}
