@@ -1,13 +1,5 @@
 package domain
 
-type PresEmotions struct {
-	Like     uint64 `json:"like"`
-	Love     uint64 `json:"love"`
-	Laughter uint64 `json:"laughter"`
-	Surprise uint64 `json:"surprise"`
-	Sad      uint64 `json:"sad"`
-}
-
 type CurrentDemoSlide struct {
 	ViewMode bool             `json:"viewMode"`
 	Width    uint32           `json:"width"`
