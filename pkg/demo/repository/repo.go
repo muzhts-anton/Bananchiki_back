@@ -173,11 +173,13 @@ func (ur *dbDemoRepository) GetPresQuestions(pid uint64) ([]domain.Question, err
 	}
 
 	out := make([]domain.Question, 0)
-	for _, q := range resp {
+	for i := range resp {
+		i += 1
+		i -= 1
 		out = append(out, domain.Question{
-			Idx:    cast.ToUint64(q[0]),
-			Option: cast.ToString(q[1]),
-			Likes:  cast.ToUint64(q[2]),
+			Idx:    0,  //cast.ToUint64(q[0]),
+			Option: "", //cast.ToString(q[1]),
+			Likes:  0,  //cast.ToUint64(q[2]),
 		})
 	}
 
