@@ -19,4 +19,8 @@ const (
 	queryQuestionAsk = `
 	INSERT INTO question (presentation_id, idx, option, likes) VALUES ($1, $2, $3, $4);
 	`
+
+	queryQuestionLike = `
+	UPDATE question SET likes = likes + 1 WHERE presentation_id = $1 AND idx = $2;
+	`
 )

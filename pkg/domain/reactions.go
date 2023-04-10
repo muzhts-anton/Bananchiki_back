@@ -24,13 +24,20 @@ type QuestionApi struct {
 	Option Question `json:"question"`
 }
 
+type QuestionLikeApi struct {
+	Hash string `json:"hash"`
+	Idx  uint64 `json:"idx"`
+}
+
 type ReacUsecase interface {
 	ReactionsUpd(emo ReactionsApi) error
 	QuestionAsk(h string, q Question) error
+	QuestionLike(h string, idx uint64) error
 }
 
 type ReacRepository interface {
 	GetPresIdByHash(hash string) (uint64, error)
 	ReactionsUpd(pid uint64, emo PresEmotions) error
 	QuestionAsk(pid uint64, q Question) error
+	QuestionLike(pid, idx uint64) error
 }

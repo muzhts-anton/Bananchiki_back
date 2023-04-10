@@ -31,3 +31,12 @@ func (du reacUsecase) QuestionAsk(h string, q domain.Question) error {
 
 	return du.reacRepo.QuestionAsk(presId, q)
 }
+
+func (du reacUsecase) QuestionLike(h string, idx uint64) error {
+	presId, err := du.reacRepo.GetPresIdByHash(h)
+	if err != nil {
+		return err
+	}
+
+	return du.reacRepo.QuestionLike(presId, idx)
+}

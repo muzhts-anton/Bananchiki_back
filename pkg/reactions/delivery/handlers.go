@@ -17,4 +17,5 @@ func SetReacHandlers(router *mux.Router, au domain.ReacUsecase) {
 
 	router.HandleFunc(urlReactionsUpd, handler.ReactionsUpd).Methods("PUT", "OPTIONS")
 	router.HandleFunc(urlQuestionAsk, handler.QuestionAsk).Methods("PUT", "OPTIONS")
+	router.HandleFunc(urlQuestionLike, handler.QuestionLike).Methods("PUT", "OPTIONS")
 }

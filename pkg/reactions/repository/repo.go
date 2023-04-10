@@ -54,3 +54,13 @@ func (ur *dbReacRepository) QuestionAsk(pid uint64, q domain.Question) error {
 
 	return err
 }
+
+func (ur *dbReacRepository) QuestionLike(pid uint64, idx uint64) error {
+	err := ur.dbm.Execute(queryQuestionLike, pid, idx)
+	if err != nil {
+		log.Warn("{QuestionLike} in query: " + queryQuestionLike)
+		log.Error(err)
+	}
+
+	return err
+}
