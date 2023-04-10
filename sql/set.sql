@@ -54,7 +54,7 @@ CREATE TABLE users (
     username    VARCHAR(50) NOT NULL,
     password    VARCHAR(200) NOT NULL,
     email       VARCHAR(50) NOT NULL,
-    imgsrc      VARCHAR(50) DEFAULT '/static/userimgs/profile.svg'
+    imgsrc      VARCHAR(50) DEFAULT '/static/profile/avatars/default.jpeg'
 );
 
 CREATE TABLE presentation (
@@ -64,7 +64,7 @@ CREATE TABLE presentation (
     viewmode                BOOLEAN DEFAULT FALSE NOT NULL,
     code                    VARCHAR(4) UNIQUE DEFAULT unique_random(4, 'presentation', 'code'),
     demo_idx                SMALLINT DEFAULT 0 NOT NULL,
-    url                     VARCHAR(128) DEFAULT '/static/presentations/' NOT NULL,
+    url                     VARCHAR(128) DEFAULT '/static/presentation/slides/' NOT NULL,
     converted_slide_num     SMALLINT DEFAULT 0 NOT NULL,
     quiz_num                SMALLINT DEFAULT 0 NOT NULL,
     emotion_like            BIGINT DEFAULT 0 NOT NULL,

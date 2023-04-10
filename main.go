@@ -6,6 +6,10 @@ import (
 	"banana/pkg/utils/log"
 	"banana/pkg/utils/middlewares"
 
+	"banana/pkg/profile/delivery"
+	"banana/pkg/profile/repository"
+	"banana/pkg/profile/usecase"
+
 	"banana/pkg/quiz/delivery"
 	"banana/pkg/quiz/repository"
 	"banana/pkg/quiz/usecase"
@@ -44,6 +48,10 @@ func main() {
 	db := database.InitDatabase()
 	db.Connect()
 	defer db.Disconnect()
+
+	profRep := profrep.InitProfRep(db)
+	profUsc := profusc.InitProfUsc(profRep)
+	profdel.SetProfHandlers(api, profUsc)
 
 	quizRep := quizrep.InitQuizRep(db)
 	quizUsc := quizusc.InitQuizUsc(quizRep)
