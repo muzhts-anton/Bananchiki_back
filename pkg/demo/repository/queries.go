@@ -69,7 +69,7 @@ const (
 
 	querySetAllVotes = `
 	UPDATE vote
-	SET votes = $1
+	SET votes_num = $1
 	WHERE quiz_id = $2;
 	`
 
