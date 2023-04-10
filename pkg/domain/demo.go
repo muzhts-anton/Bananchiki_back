@@ -25,4 +25,6 @@ type DemoRepository interface {
 	DemoStop(pid uint64) error
 	GetPresEmotions(pid uint64) (PresEmotions, error)
 	GetPresQuestions(pid uint64) ([]Question, error)
+	ZeroingReactions(pid uint64) error
+	SetAllVotes(pid uint64, value int) error
 }

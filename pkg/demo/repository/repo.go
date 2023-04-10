@@ -183,3 +183,34 @@ func (ur *dbDemoRepository) GetPresQuestions(pid uint64) ([]domain.Question, err
 
 	return out, nil
 }
+
+func (ur *dbDemoRepository) ZeroingReactions(pid uint64) error {
+	err := ur.dbm.Execute(queryZeroingReations, pid)
+	if err != nil {
+		log.Warn("{ZeroingReactions} in query: " + queryZeroingReations)
+		log.Error(err)
+		return err
+	}
+
+	return nil
+}
+
+func (ur *dbDemoRepository) SetAllVotes(pid uint64, value int) error {
+	resp, err := ur.dbm.Query(queryGetAllQuizzes, pid)
+	if err != nil {
+		log.Warn("{setAllVotes} in query: " + queryGetAllQuizzes)
+		log.Error(err)
+		return err
+	}
+
+	for _, q := range resp {
+		err = ur.dbm.Execute(querySetAllVotes, value, cast.ToUint64(q[0]))
+		if err != nil {
+			log.Warn("{setAllVotes} in query: " + querySetAllVotes)
+			log.Error(err)
+			return err
+		}
+	}
+
+	return nil
+}
