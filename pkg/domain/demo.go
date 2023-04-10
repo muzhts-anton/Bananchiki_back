@@ -27,4 +27,5 @@ type DemoRepository interface {
 	GetPresQuestions(pid uint64) ([]Question, error)
 	ZeroingReactions(pid uint64) error
 	SetAllVotes(pid uint64, value int) error
+	DeletePresQuestions(pid uint64) error
 }

@@ -214,3 +214,14 @@ func (ur *dbDemoRepository) SetAllVotes(pid uint64, value int) error {
 
 	return nil
 }
+
+func (ur *dbDemoRepository) DeletePresQuestions(pid uint64) error {
+	err := ur.dbm.Execute(queryDeletePresQuestions, pid)
+	if err != nil {
+		log.Warn("{DeletePresQuestions} in query: " + queryDeletePresQuestions)
+		log.Error(err)
+		return err
+	}
+
+	return nil
+}

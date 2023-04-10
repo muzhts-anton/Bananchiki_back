@@ -76,4 +76,8 @@ const (
 	queryGetPresQuestions = `
 	SELECT idx, option, likes FROM question WHERE presentation_id = $1 ORDER BY idx;
 	`
+
+	queryDeletePresQuestions = `
+	DELETE FROM questions WHERE presentation_id = $1;
+	`
 )

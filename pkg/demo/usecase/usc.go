@@ -86,5 +86,10 @@ func (du demoUsecase) ShowDemoSop(presId, userId uint64) error {
 		return err
 	}
 
+	err = du.demoRepo.DeletePresQuestions(presId)
+	if err != nil {
+		return err
+	}
+
 	return du.demoRepo.DemoStop(presId)
 }
