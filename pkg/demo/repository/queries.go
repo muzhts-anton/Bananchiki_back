@@ -52,6 +52,6 @@ const (
 	`
 
 	queryGetPresQuestions = `
-	SELECT idx, option, likes FROM question WHERE presentation_id = $1;
+	SELECT idx, option, likes FROM question WHERE presentation_id = $1 ORDER BY idx;
 	`
 )

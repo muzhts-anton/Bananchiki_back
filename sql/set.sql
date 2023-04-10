@@ -111,7 +111,7 @@ CREATE TABLE vote (
 CREATE TABLE question (
     id              BIGSERIAL NOT NULL PRIMARY KEY,
     presentation_id BIGINT REFERENCES presentation (id),
-    idx             SMALLINT DEFAULT 0 NOT NULL,
+    idx             BIGINT DEFAULT 0 NOT NULL,
     option          VARCHAR(512) NOT NULL,
     likes           BIGINT DEFAULT 0 NOT NULL
 );
