@@ -78,6 +78,6 @@ const (
 	`
 
 	queryDeletePresQuestions = `
-	DELETE FROM questions WHERE presentation_id = $1;
+	DELETE FROM question WHERE presentation_id = $1;
 	`
 )
