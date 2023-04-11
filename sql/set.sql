@@ -60,7 +60,7 @@ CREATE TABLE users (
 CREATE TABLE presentation (
     id                      BIGSERIAL NOT NULL PRIMARY KEY,
     creator_id              BIGINT REFERENCES users (id),
-    name                    VARCHAR(64) DEFAULT 'Temporary presentation name' NOT NULL,
+    name                    VARCHAR(128) DEFAULT 'Temporary presentation name' NOT NULL,
     viewmode                BOOLEAN DEFAULT FALSE NOT NULL,
     code                    VARCHAR(4) UNIQUE DEFAULT unique_random(4, 'presentation', 'code'),
     demo_idx                SMALLINT DEFAULT 0 NOT NULL,

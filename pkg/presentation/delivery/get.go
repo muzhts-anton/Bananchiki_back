@@ -7,6 +7,7 @@ import (
 	"banana/pkg/utils/sessions"
 
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"path/filepath"
 	"strconv"
@@ -100,4 +101,47 @@ func (h *presHandler) createPres(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(out)
+}
+
+// /presentation/{id}/name
+func (h *presHandler) changePresName(w http.ResponseWriter, r *http.Request) {
+	usrId, err := sessions.CheckSession(r)
+	if err == domain.ErrUserNotLoggedIn {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	presId, err := strconv.ParseUint(mux.Vars(r)["id"], 10, 64)
+	if err != nil {
+		http.Error(w, domain.ErrUrlParameter.Error(), http.StatusBadRequest)
+		return
+	}
+
+	b, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	var p struct {
+		name string `json:"name"`
+	}
+	err = json.Unmarshal(b, &p)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = h.PresUsecase.ChangePresName(usrId, presId, p.name)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }

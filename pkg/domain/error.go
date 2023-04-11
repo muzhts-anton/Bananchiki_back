@@ -23,4 +23,6 @@ var (
 	ErrEmailExists        = errors.New("Email not unique")
 	ErrBadPassword        = errors.New("Wrong password")
 	ErrNoUser             = errors.New("No user found")
+
+	ErrInvalidPresName = errors.New("Presentation name is too long")
 )

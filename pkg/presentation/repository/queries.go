@@ -58,4 +58,12 @@ const (
 	WHERE quiz_id = $1
 	ORDER BY idx;
 	`
+
+	queryGetPresOwner = `
+	SELECT creator_id FROM presentation WHERE id = $1;
+	`
+
+	queryChangePresName = `
+	UPDATE presentation SET name = $1 WHERE id = $2;
+	`
 )

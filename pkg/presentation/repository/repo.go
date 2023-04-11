@@ -156,3 +156,27 @@ func (r *dbPresRepository) GetQuizzes(t string, pid uint64) (quizzes []domain.Qu
 
 	return
 }
+
+func (r *dbPresRepository) GetPresOwner(pid uint64) (uint64, error) {
+	resp, err := r.dbm.Query(queryGetPresOwner, pid)
+	if err != nil {
+		log.Warn("{GetPresOwner} in query: " + queryGetPresOwner)
+		log.Error(err)
+		return 0, domain.ErrDatabaseRequest
+	}
+	if len(resp) == 0 {
+		return 0, domain.ErrDatabaseRange
+	}
+
+	return cast.ToUint64(resp[0][0]), nil
+}
+
+func (r *dbPresRepository) ChangePresName(pid uint64, name string) error {
+	err := r.dbm.Execute(queryChangePresName, name, pid)
+	if err != nil {
+		log.Warn("{ChangePresName} in query: " + queryChangePresName)
+		log.Error(err)
+	}
+
+	return err
+}

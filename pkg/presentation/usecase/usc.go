@@ -122,3 +122,20 @@ func (pu *PresUsecase) GetPres(cid, pid uint64) (p domain.PresApiResponse, err e
 
 	return
 }
+
+func (pu *PresUsecase) ChangePresName(uid, pid uint64, name string) error {
+	ownerId, err := pu.presRepo.GetPresOwner(pid)
+	if err != nil {
+		return err
+	}
+
+	if ownerId != uid {
+		return domain.ErrPermissionDenied
+	}
+
+	if len(name) > 128 {
+		return domain.ErrInvalidPresName
+	}
+
+	return pu.presRepo.ChangePresName(pid, name)
+}
