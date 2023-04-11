@@ -72,10 +72,12 @@ type PresRepository interface {
 	UpdatePresUrl(pid uint64, url string) error
 	GetPresOwner(pid uint64) (uint64, error)
 	ChangePresName(pid uint64, name string) error
+	DeletePres(pid uint64) error
 }
 
 type PresUsecase interface {
 	GetPres(cid, pid uint64) (PresApiResponse, error)
 	CreatePres(url string, cid uint64) (uint64, error)
 	ChangePresName(uid, pid uint64, name string) error
+	DeletePres(uid, pid uint64) error
 }

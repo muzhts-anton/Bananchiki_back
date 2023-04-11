@@ -18,4 +18,5 @@ func SetPresHandlers(router *mux.Router, uc *presusc.PresUsecase) {
 	router.HandleFunc(urlGetPres, handler.getPres).Methods("GET", "OPTIONS")
 	router.HandleFunc(urlCreatePres, handler.createPres).Methods("POST", "OPTIONS")
 	router.HandleFunc(urlPresNameChange, handler.changePresName).Methods("PUT", "OPTIONS")
+	router.HandleFunc(urlDeletePres, handler.deletePres).Methods("POST", "OPTIONS")
 }

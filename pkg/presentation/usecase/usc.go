@@ -34,11 +34,9 @@ func (pu *PresUsecase) CreatePres(name string, cid uint64) (uint64, error) {
 	if err != nil {
 		log.Error(err)
 	}
-
-	// err = pu.presRepo.UpdatePresUrl(presId, gslides.Url)
-	// if err != nil {
-	// 	return 0, err
-	// }
+	if gslides == nil {
+		return 0, domain.ErrGrpc
+	}
 
 	slides := make([]domain.ConvertedSlide, 0, gslides.Num)
 	for _, s := range gslides.Slide {
@@ -138,4 +136,17 @@ func (pu *PresUsecase) ChangePresName(uid, pid uint64, name string) error {
 	}
 
 	return pu.presRepo.ChangePresName(pid, name)
+}
+
+func (pu *PresUsecase) DeletePres(uid, pid uint64) error {
+	ownerId, err := pu.presRepo.GetPresOwner(pid)
+	if err != nil {
+		return err
+	}
+
+	if ownerId != uid {
+		return domain.ErrPermissionDenied
+	}
+
+	return pu.presRepo.DeletePres(pid)
 }

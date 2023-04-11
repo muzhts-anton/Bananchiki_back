@@ -67,3 +67,33 @@ const (
 	UPDATE presentation SET name = $1 WHERE id = $2;
 	`
 )
+
+const (
+	queryGetSlidesIds = `
+	SELECT item_id, type FROM slideorder WHERE presentation_id = $1;
+	`
+
+	queryDeleteVotes = `
+	DELETE FROM vote WHERE quiz_id = $1;
+	`
+
+	queryDeleteQuiz = `
+	DELETE FROM quiz WHERE id = $1;
+	`
+
+	queryDeleteConvSlides = `
+	DELETE FROM convertedslide WHERE id = $1;
+	`
+
+	queryDeleteSlideorder = `
+	DELETE FROM slideorder WHERE presentation_id = $1;
+	`
+
+	queryDeleteQuestions = `
+	DELETE FROM question WHERE presentation_id = $1;
+	`
+
+	queryDeletePresentation = `
+	DELETE FROM presentation WHERE id = $1;
+	`
+)

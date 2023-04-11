@@ -51,8 +51,8 @@ func (ur *dbProfRepository) GetAllPres(usrId uint64) ([]domain.ProfilePresInfo, 
 			Id:          cast.ToUint64(p[0]),
 			Name:        cast.ToString(p[1]),
 			Code:        cast.ToString(p[2]),
-			QuizNum:     cast.ToUint64(p[3]),
-			ConSlideNum: cast.ToUint64(p[4]),
+			QuizNum:     uint64(cast.ToUint16(p[3])),
+			ConSlideNum: uint64(cast.ToUint16(p[4])),
 		})
 		out[i].Hash = hash.EncodeToHash(out[i].Code)
 	}

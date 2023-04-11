@@ -3,13 +3,17 @@ package domain
 import "errors"
 
 var (
+	ErrInternalServer = errors.New("Internal server error")
+
 	ErrDatabaseRequest = errors.New("Bad database request")
 	ErrDatabaseRange   = errors.New("Index out of database")
-	ErrUrlParameter    = errors.New("Error while parsing url parameter")
-	ErrInternalServer  = errors.New("Internal server error")
 	ErrCodeNotFound    = errors.New("No presentation with requested code")
 
+	ErrUrlParameter = errors.New("Error while parsing url parameter")
+
 	ErrPermissionDenied = errors.New("Permission Denied")
+
+	ErrInvalidPresName = errors.New("Presentation name is too long")
 
 	ErrFinishSession   = errors.New("User is already not logged in while trying log out")
 	ErrUserNotLoggedIn = errors.New("User is not logged in")
@@ -24,5 +28,5 @@ var (
 	ErrBadPassword        = errors.New("Wrong password")
 	ErrNoUser             = errors.New("No user found")
 
-	ErrInvalidPresName = errors.New("Presentation name is too long")
+	ErrGrpc = errors.New("gRPC error")
 )

@@ -180,3 +180,71 @@ func (r *dbPresRepository) ChangePresName(pid uint64, name string) error {
 
 	return err
 }
+
+func (r *dbPresRepository) DeletePres(pid uint64) error {
+	convslides := make([]uint64, 0)
+	questions := make([]uint64, 0)
+
+	resp, err := r.dbm.Query(queryGetSlidesIds, pid)
+	if err != nil {
+		log.Warn("{DeletePres} in query: " + queryGetSlidesIds)
+		log.Error(err)
+		return err
+	}
+
+	for _, s := range resp {
+		if cast.ToString(s[1]) == domain.SlideTypeQuiz {
+			questions = append(questions, cast.ToUint64(s[0]))
+		} else {
+			convslides = append(convslides, cast.ToUint64(s[0]))
+		}
+	}
+
+	for _, q := range questions {
+		err = r.dbm.Execute(queryDeleteVotes, q)
+		if err != nil {
+			log.Warn("{DeletePres} in query: " + queryDeleteVotes)
+			log.Error(err)
+			return err
+		}
+
+		err = r.dbm.Execute(queryDeleteQuiz, q)
+		if err != nil {
+			log.Warn("{DeletePres} in query: " + queryDeleteQuiz)
+			log.Error(err)
+			return err
+		}
+	}
+
+	for _, s := range convslides {
+		err = r.dbm.Execute(queryDeleteConvSlides, s)
+		if err != nil {
+			log.Warn("{DeletePres} in query: " + queryDeleteConvSlides)
+			log.Error(err)
+			return err
+		}
+	}
+
+	err = r.dbm.Execute(queryDeleteSlideorder, pid)
+	if err != nil {
+		log.Warn("{DeletePres} in query: " + queryDeleteSlideorder)
+		log.Error(err)
+		return err
+	}
+
+	err = r.dbm.Execute(queryDeleteQuestions, pid)
+	if err != nil {
+		log.Warn("{DeletePres} in query: " + queryDeleteQuestions)
+		log.Error(err)
+		return err
+	}
+
+	err = r.dbm.Execute(queryDeletePresentation, pid)
+	if err != nil {
+		log.Warn("{DeletePres} in query: " + queryDeletePresentation)
+		log.Error(err)
+		return err
+	}
+
+	return nil
+}

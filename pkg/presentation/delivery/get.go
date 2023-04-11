@@ -129,7 +129,7 @@ func (h *presHandler) changePresName(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var p struct {
-		name string `json:"name"`
+		Name string `json:"name"`
 	}
 	err = json.Unmarshal(b, &p)
 	if err != nil {
@@ -137,7 +137,34 @@ func (h *presHandler) changePresName(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.PresUsecase.ChangePresName(usrId, presId, p.name)
+	err = h.PresUsecase.ChangePresName(usrId, presId, p.Name)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+// /presentation/{id}/delete
+func (h *presHandler) deletePres(w http.ResponseWriter, r *http.Request) {
+	usrId, err := sessions.CheckSession(r)
+	if err == domain.ErrUserNotLoggedIn {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	presId, err := strconv.ParseUint(mux.Vars(r)["id"], 10, 64)
+	if err != nil {
+		http.Error(w, domain.ErrUrlParameter.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = h.PresUsecase.DeletePres(usrId, presId)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
