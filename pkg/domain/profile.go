@@ -1,9 +1,5 @@
 package domain
 
-import (
-	"net/http"
-)
-
 const(
 	AvatarFilePath = "/static/profile/avatars/"
 )

@@ -65,8 +65,7 @@ func (ur *dbProfRepository) UpdateAvatar(userId uint64, avatarPath string) error
 	if err != nil {
 		log.Warn("{UpdateAvatar} in query: " + queryUpdateAvatar)
 		log.Error(err)
-		return err
 	}
 	
-	return nil
+	return err
 }

@@ -1,14 +1,14 @@
 package profdel
 
 import (
-	"banana/pkg/utils/sessions"
 	"banana/pkg/domain"
 	"banana/pkg/utils/filesaver"
+	"banana/pkg/utils/log"
+	"banana/pkg/utils/sessions"
 
-	"path/filepath"
 	"encoding/json"
 	"net/http"
-	"banana/pkg/utils/log"
+	"path/filepath"
 )
 
 // /profile
@@ -35,7 +35,8 @@ func (h *profHandler) GetProfile(w http.ResponseWriter, r *http.Request) {
 	w.Write(out)
 }
 
-func (h* profHandler) UpdateProfileAvatar(w http.ResponseWriter, r* http.Request){
+// /profile/avatar
+func (h *profHandler) UpdateProfileAvatar(w http.ResponseWriter, r *http.Request) {
 	userId, err := sessions.CheckSession(r)
 	if err == domain.ErrUserNotLoggedIn {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -45,12 +46,13 @@ func (h* profHandler) UpdateProfileAvatar(w http.ResponseWriter, r* http.Request
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	err = r.ParseMultipartForm(3 * 1024 * 1024) // limit 10Mb
+
+	err = r.ParseMultipartForm(3 * 1024 * 1024) // limit 3Mb
 	if err != nil {
 		log.Error(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
-	}	
+	}
 
 	uploaded, header, err := r.FormFile("avatar")
 	if err != nil {
@@ -66,16 +68,15 @@ func (h* profHandler) UpdateProfileAvatar(w http.ResponseWriter, r* http.Request
 		return
 	}
 
-	err = h.profUsecase.UpdateProfileAvatar(filename, userId)
+	err = h.profUsecase.UpdateProfileAvatar(domain.AvatarFilePath+filename, userId)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	path := domain.AvatarFilePath + filename
 	out, err := json.Marshal(struct {
 		Path string `json:"path"`
-	}{Path: path})
+	}{Path: domain.AvatarFilePath + filename})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
