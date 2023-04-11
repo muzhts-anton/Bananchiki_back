@@ -16,4 +16,5 @@ func SetProfHandlers(router *mux.Router, au domain.ProfUsecase) {
 	}
 
 	router.HandleFunc(urlGetProfile, handler.GetProfile).Methods("GET", "OPTIONS")
+	router.HandleFunc(urlUpdAvatar, handler.UpdateProfileAvatar).Methods("POST", "OPTIONS")
 }

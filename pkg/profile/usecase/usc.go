@@ -32,3 +32,11 @@ func (u *profUsecase) GetProfile(usrId uint64) (domain.Profile, error) {
 		Presentations: pres,
 	}, nil
 }
+
+func (u *profUsecase) UpdateProfileAvatar(filename string, usrId uint64) error{
+	err := u.profRepo.UpdateAvatar(usrId, filename)
+	if err != nil{
+		return err
+	}
+	return nil
+}

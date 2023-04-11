@@ -59,3 +59,14 @@ func (ur *dbProfRepository) GetAllPres(usrId uint64) ([]domain.ProfilePresInfo, 
 
 	return out, nil
 }
+
+func (ur *dbProfRepository) UpdateAvatar(userId uint64, avatarPath string) error{
+	err := ur.dbm.Execute(queryUpdateAvatar, avatarPath, userId)
+	if err != nil {
+		log.Warn("{UpdateAvatar} in query: " + queryUpdateAvatar)
+		log.Error(err)
+		return err
+	}
+	
+	return nil
+}

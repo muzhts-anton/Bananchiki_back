@@ -10,4 +10,8 @@ const (
 	FROM presentation
 	WHERE creator_id = $1;
 	`
+
+	queryUpdateAvatar = `
+	UPDATE users SET imgsrc = $1 where users.id = $2;
+	`
 )

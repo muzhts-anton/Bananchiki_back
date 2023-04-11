@@ -1,5 +1,13 @@
 package domain
 
+import (
+	"net/http"
+)
+
+const(
+	AvatarFilePath = "/static/profile/avatars/"
+)
+
 type ProfilePresInfo struct {
 	Id          uint64 `json:"id"`
 	Name        string `json:"name"`
@@ -19,9 +27,11 @@ type Profile struct {
 
 type ProfUsecase interface {
 	GetProfile(usrId uint64) (Profile, error)
+	UpdateProfileAvatar(filename string, usrId uint64) error
 }
 
 type ProfRepository interface {
 	GetUserInfo(userId uint64) (User, error)
 	GetAllPres(userId uint64) ([]ProfilePresInfo, error)
+	UpdateAvatar(userId uint64, avatarPath string) error
 }
