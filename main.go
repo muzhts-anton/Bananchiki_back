@@ -1,6 +1,7 @@
 package main
 
 import (
+	"banana/pkg/csrf"
 	presgrpc "banana/pkg/presentation/delivery/grpc"
 	"banana/pkg/utils/database"
 	"banana/pkg/utils/log"
@@ -44,6 +45,7 @@ func main() {
 	api.Use(middlewares.Logger)
 	api.Use(middlewares.Cors)
 	api.Use(middlewares.PanicRecovery)
+	api.Use(middlewares.Csrf)
 
 	db := database.InitDatabase()
 	db.Connect()
@@ -75,6 +77,8 @@ func main() {
 	presRepo := presrep.InitPresRep(db)
 	presUsc := presusc.InitPresUscase(c, presRepo)
 	presdel.SetPresHandlers(api, presUsc)
+
+	csrf.SetHandler(api)
 
 	server := http.Server{
 		Addr:    fmt.Sprintf(":%s", "3000"),

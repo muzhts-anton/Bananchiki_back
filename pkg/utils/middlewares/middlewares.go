@@ -3,9 +3,11 @@ package middlewares
 import (
 	"banana/pkg/utils/log"
 
+	"fmt"
 	"net/http"
 	"time"
-	"fmt"
+
+	"github.com/gorilla/csrf"
 )
 
 func Logger(next http.Handler) http.Handler {
@@ -44,3 +46,9 @@ func Cors(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
+
+var Csrf = csrf.Protect(
+	[]byte("32-byte-long-auth-key"),
+	csrf.Path("/"),
+	csrf.Secure(false),
+)
