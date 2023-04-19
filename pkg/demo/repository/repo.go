@@ -134,6 +134,20 @@ func (ur *dbDemoRepository) DemoGo(pid uint64, idx uint32) error {
 	return err
 }
 
+func (ur *dbDemoRepository) GetViewMode(pid uint64) (bool, error){
+	resp, err := ur.dbm.Query(queryGetViewMode, pid)
+	if err != nil {
+		log.Warn("{GetViewMode} in query: " + queryGetViewMode)
+		log.Error(err)
+		return false, err
+	}
+
+	if len(resp) == 0 {
+		return false, domain.ErrDatabaseRequest
+	}
+	return cast.ToBool(resp[0][0]), nil
+}
+
 func (ur *dbDemoRepository) DemoStop(pid uint64) error {
 	err := ur.dbm.Execute(queryDemoStop, pid)
 	if err != nil {

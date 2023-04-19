@@ -27,6 +27,8 @@ var (
 	ErrEmailExists        = errors.New("Email not unique")
 	ErrBadPassword        = errors.New("Wrong password")
 	ErrNoUser             = errors.New("No user found")
+	
+	ErrWrongEmotions  = errors.New("Wrong Emotions")
 
 	ErrGrpc = errors.New("gRPC error")
 )

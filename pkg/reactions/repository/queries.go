@@ -8,11 +8,11 @@ const (
 	queryUpdEmotions = `
 	UPDATE presentation
 	SET
-		emotion_like = $1,
-		emotion_love = $2,
-		emotion_laughter = $3,
-		emotion_surprise = $4,
-		emotion_sad = $5
+		emotion_like = emotion_like + $1,
+		emotion_love = emotion_love + $2,
+		emotion_laughter = emotion_laughter + $3,
+		emotion_surprise = emotion_surprise + $4,
+		emotion_sad = emotion_sad + $5
 	WHERE id = $6;
 	`
 

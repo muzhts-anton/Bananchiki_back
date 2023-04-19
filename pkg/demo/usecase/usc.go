@@ -63,6 +63,15 @@ func (du demoUsecase) ShowDemoGo(presId, userId uint64, idx uint32) error {
 		return domain.ErrPermissionDenied
 	}
 
+	viewMode, err := du.demoRepo.GetViewMode(presId)
+	if err != nil{
+		return err
+	}
+
+	if !viewMode{
+		du.demoRepo.ZeroingReactions(presId)
+	}
+
 	return du.demoRepo.DemoGo(presId, idx)
 }
 

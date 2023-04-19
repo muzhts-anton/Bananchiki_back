@@ -47,6 +47,12 @@ const (
 	UPDATE presentation SET viewmode = true, demo_idx = $1 WHERE id = $2;
 	`
 
+	queryGetViewMode = `
+	SELECT viewmode
+	FROM  presentation
+	WHERE id = $1
+	`
+
 	queryDemoStop = `
 	UPDATE presentation SET viewmode = false WHERE id = $1;
 	`

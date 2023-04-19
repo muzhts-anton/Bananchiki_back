@@ -20,6 +20,10 @@ func (du reacUsecase) ReactionsUpd(emo domain.ReactionsApi) error {
 		return err
 	}
 
+	if (emo.Emotions.Laughter + emo.Emotions.Like + emo.Emotions.Love + emo.Emotions.Surprise + emo.Emotions.Sad != 1){
+		return domain.ErrWrongEmotions
+	}
+
 	return du.reacRepo.ReactionsUpd(presId, emo.Emotions)
 }
 
