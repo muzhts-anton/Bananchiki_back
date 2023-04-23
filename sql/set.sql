@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS quiz           CASCADE;
 DROP TABLE IF EXISTS convertedslide CASCADE;
 DROP TABLE IF EXISTS vote           CASCADE;
 DROP TABLE IF EXISTS question       CASCADE;
+DROP TABLE IF EXISTS voters         CASCADE;
 
 DROP FUNCTION IF EXISTS gen_random_bytes;
 DROP FUNCTION IF EXISTS random_string;
@@ -83,13 +84,19 @@ CREATE TABLE slideorder (
 );
 
 CREATE TABLE quiz (
-    id          BIGSERIAL NOT NULL PRIMARY KEY,
-    type        VARCHAR(64) DEFAULT 'horizontal' NOT NULL,
-    question    VARCHAR(512) NOT NULL,
-    background  VARCHAR(16) NOT NULL,
-    font_color  VARCHAR(16) NOT NULL,
-    font_size   VARCHAR(16) NOT NULL,
-    graph_color VARCHAR(16) NOT NULL
+    id              BIGSERIAL NOT NULL PRIMARY KEY,
+    type            VARCHAR(64) DEFAULT 'horizontal' NOT NULL,
+    question        VARCHAR(512) NOT NULL,
+    runout          BOOLEAN DEFAULT TRUE NOT NULL,
+    seconds_num     BIGINT DEFAULT 0 NOT NULL,
+    result_after    BOOLEAN DEFAULT FALSE NOT NULL,
+    price           BIGINT DEFAULT 1 NOT NULL,
+    extra_points    BOOLEAN DEFAULT FALSE NOT NULL,
+    start_time      TIMESTAMP DEFAULT current_timestamp NOT NULL,
+    background      VARCHAR(16) NOT NULL,
+    font_color      VARCHAR(16) NOT NULL,
+    font_size       VARCHAR(16) NOT NULL,
+    graph_color     VARCHAR(16) NOT NULL
 );
 
 CREATE TABLE convertedslide (
@@ -104,6 +111,7 @@ CREATE TABLE vote (
     quiz_id     BIGINT REFERENCES quiz (id),
     idx         SMALLINT NOT NULL,
     option      VARCHAR(512) NOT NULL,
+    correct     BOOLEAN DEFAULT FALSE NOT NULL,
     votes_num   BIGINT NOT NULL,
     color       VARCHAR(16) NOT NULL
 );
@@ -116,3 +124,10 @@ CREATE TABLE question (
     likes           BIGINT DEFAULT 0 NOT NULL
 );
 
+CREATE TABLE voters (
+    id              BIGSERIAL NOT NULL PRIMARY KEY,
+    presentation_id BIGINT REFERENCES presentation (id),
+    name            VARCHAR(32) DEFAULT '' NOT NULL,
+    points          BIGINT DEFAULT 0 NOT NULL,
+    top_place       SMALLINT DEFAULT 0 NOT NULL
+);
