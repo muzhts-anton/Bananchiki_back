@@ -2,6 +2,7 @@ package demousc
 
 import (
 	"banana/pkg/domain"
+	"banana/pkg/utils/log"
 )
 
 type demoUsecase struct {
@@ -68,8 +69,11 @@ func (du demoUsecase) ShowDemoGo(presId, userId uint64, idx uint32) error {
 		return err
 	}
 
+	log.Debug("viewMode")
+
 	if !viewMode{
-		du.demoRepo.ZeroingReactions(presId)
+		log.Debug("ZeroingVotes")
+		du.demoRepo.SetAllVotes(presId, 0)
 	}
 
 	return du.demoRepo.DemoGo(presId, idx)

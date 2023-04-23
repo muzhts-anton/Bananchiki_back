@@ -205,7 +205,7 @@ func (ur *dbDemoRepository) ZeroingReactions(pid uint64) error {
 		log.Error(err)
 		return err
 	}
-
+	log.Debug("zeroing reactions")
 	return nil
 }
 
