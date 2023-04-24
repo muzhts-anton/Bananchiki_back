@@ -89,3 +89,35 @@ const (
 	UPDATE vote SET votes_num = votes_num + 1 WHERE quiz_id = $1 AND idx = $2;
 	`
 )
+
+const (
+	queryCompetitionStart = `
+	UPDATE quiz SET runout = False, start_time = current_timestamp WHERE id = $1
+	`
+
+	queryCompetitionStop = `
+	UPDATE quiz SET runout = True WHERE id = $1
+	`
+
+	queryCompetitionVoterRegister = `
+	INSERT INTO voters (presentation_id, name)
+	VALUES ($1, $2);
+	RETURNING id;
+	`
+
+	queryGetAllPres = `
+	SELECT id, code FROM presentation;
+	`
+
+	queryGetPrevCompetitionResult = `
+	SELECT id, name, points
+	FROM voters
+	ORDER BY top_place DESC
+	`
+
+	queryGetCurrentCompetitionResult = `
+	SELECT id, name, points
+	FROM voters
+	ORDER BY points DESC
+	`
+)

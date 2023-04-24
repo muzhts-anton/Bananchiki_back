@@ -5,6 +5,7 @@ import (
 	"banana/pkg/utils/cast"
 	"banana/pkg/utils/database"
 	"banana/pkg/utils/log"
+	"banana/pkg/utils/hash"
 )
 
 type dbQuizRepository struct {
@@ -175,4 +176,106 @@ func (r *dbQuizRepository) PollQuizVote(idx uint32, qid uint64) error {
 	}
 
 	return nil
+}
+
+func (r *dbQuizRepository) CompetitionStart(quizId uint64, presId uint64) error{
+	err := r.dbm.Execute(queryCompetitionStart, quizId)
+	if err != nil {
+		log.Warn("{queryCompetitionStart} in query: " + queryCompetitionStart)
+		log.Error(err)
+		return err
+	}
+
+	return nil
+}
+
+func (r *dbQuizRepository) CompetitionStop(quizId uint64, presId uint64) error{
+	err := r.dbm.Execute(queryCompetitionStop, quizId)
+	if err != nil {
+		log.Warn("{queryCompetitionStop} in query: " + queryCompetitionStop)
+		log.Error(err)
+		return err
+	}
+
+	return nil
+}
+
+func (r *dbQuizRepository) CompetitionVoterRegister(name string, presId uint64) (uint64, error){
+	resp, err := r.dbm.Query(queryCompetitionVoterRegister, presId, name)
+	if err != nil {
+		log.Warn("{queryCompetitionStop} in query: " + queryCompetitionStop)
+		log.Error(err)
+		return 0, err
+	}
+
+	id := cast.ToUint64(resp[0][0])
+
+	if len(resp) == 0 {
+		log.Warn("{CompetitionVoterRegister}")
+		log.Error(domain.ErrDatabaseRange)
+		return 0, domain.ErrDatabaseRange
+	}
+
+	return id, nil
+}
+
+func (r *dbQuizRepository) GetPresIdByHash(h string) (uint64, error) {
+	resp, err := r.dbm.Query(queryGetAllPres)
+	if err != nil {
+		log.Warn("{GetPresIdByHash} in query: " + queryGetAllPres)
+		log.Error(err)
+		return 0, err
+	}
+
+	for _, pres := range resp {
+		if code := cast.ToString(pres[1]); hash.EncodeToHash(code) == h {
+			return cast.ToUint64(pres[0]), nil
+		}
+	}
+
+	return 0, domain.ErrCodeNotFound
+}
+
+func (r *dbQuizRepository) GetPrevCompetitionResult(presId uint64) ([]domain.ResultItem, error){
+	resp, err := r.dbm.Query(queryGetCurrentCompetitionResult)
+	if err != nil {
+		log.Warn("{GetCurrentCompetitionResult} in query: " + queryGetCurrentCompetitionResult)
+		log.Error(err)
+		return []domain.ResultItem{}, err
+	}
+
+	var resultItems []domain.ResultItem
+
+	i := 0
+
+	for _, voter := range resp {
+		if i == 5{
+			break
+		}
+		name := cast.ToString(voter[1])
+		points := cast.ToUint64(voter[2])
+		resultItems = append(resultItems, domain.ResultItem{Name: name, Points: int(points)})
+		i += 1
+	}
+
+	return resultItems, nil
+}
+
+func (r *dbQuizRepository) GetCurrentCompetitionResult(presId uint64) ([]domain.ResultItem, error){
+	resp, err := r.dbm.Query(queryGetCurrentCompetitionResult)
+	if err != nil {
+		log.Warn("{GetCurrentCompetitionResult} in query: " + queryGetCurrentCompetitionResult)
+		log.Error(err)
+		return []domain.ResultItem{}, err
+	}
+
+	var resultItems []domain.ResultItem
+
+	for _, voter := range resp {
+		name := cast.ToString(voter[1])
+		points := cast.ToUint64(voter[2])
+		resultItems = append(resultItems, domain.ResultItem{Name: name, Points: int(points)})
+	}
+
+	return resultItems, nil
 }

@@ -40,6 +40,21 @@ type VoteHTTP struct {
 	Vote
 }
 
+type CompetitionHttp struct {
+	QuizId  uint64 `json:"quizId"`
+	PresId	uint64 `json:"presId"`
+}
+
+type VoteRegisterHttp struct {
+	Name  string `json:"name"`
+	Hash  string `json:"hash"`
+}
+
+type ResultItem struct{
+	Name   string
+	Points int
+}
+
 type QuizRepository interface {
 	CreateQuiz(q Quiz, pid uint64) (uint64, error)
 	DeleteQuiz(qid, pid uint64) error
@@ -48,6 +63,13 @@ type QuizRepository interface {
 	UpdateQuizVote(q Vote, qid uint64) error
 	DeleteQuizVote(idx uint32, qid uint64) error
 	PollQuizVote(idx uint32, qid uint64) error
+
+	CompetitionStart(quizId uint64, presId uint64) error
+	CompetitionStop(quizId uint64, presId uint64) error
+	CompetitionVoterRegister(name string, presId uint64) (uint64, error)
+	GetPresIdByHash(hash string) (uint64, error)
+	GetPrevCompetitionResult(presId uint64) ([]ResultItem, error)
+	GetCurrentCompetitionResult(presId uint64) ([]ResultItem, error)
 }
 
 type QuizUsecase interface {
@@ -58,4 +80,9 @@ type QuizUsecase interface {
 	UpdateQuizVote(q []Vote, qid, cid uint64) error
 	DeleteQuizVote(idx uint32, qid, cid uint64) error
 	PollQuizVote(idx uint32, qid uint64) error
+
+	CompetitionStart(quizId uint64, presId uint64) error
+	CompetitionStop(quizId uint64, presId uint64) error
+	CompetitionVoterRegister(name string, hash string) (uint64, error)
+	GetCompetitionResult(presId uint64) ([]ResultItem, error)
 }
