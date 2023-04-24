@@ -184,7 +184,7 @@ func (h *quizHandler) pollQuizVote(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.QuizUsecase.PollQuizVote(q.Vote.Idx, q.QuizId)
+	err = h.QuizUsecase.PollQuizVote(q.Vote.Idx, q.QuizId, q.VoterName, q.VoterId)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

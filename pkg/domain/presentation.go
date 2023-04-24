@@ -43,6 +43,7 @@ type SlideApiResponse struct {
 	Height     uint32 `json:"height"`
 	Type       string `json:"type"`
 	Question   string `json:"question"`
+	Runout     bool   `json:"runout"`
 	Vote       []Vote `json:"votes"`
 	Background string `json:"background"`
 	FontColor  string `json:"fontColor"`

@@ -90,6 +90,7 @@ func (ur *dbDemoRepository) GetCurrentDemoSlide(pid uint64) (out domain.SlideApi
 		out.FontColor = cast.ToString(resp[0][4])
 		out.FontSize = cast.ToString(resp[0][5])
 		out.GraphColor = cast.ToString(resp[0][6])
+		out.Runout = cast.ToBool(resp[0][7])
 
 		out.Vote = make([]domain.Vote, 0)
 		tresp, terr := ur.dbm.Query(queryGetVotes, itemId)
@@ -134,7 +135,7 @@ func (ur *dbDemoRepository) DemoGo(pid uint64, idx uint32) error {
 	return err
 }
 
-func (ur *dbDemoRepository) GetViewMode(pid uint64) (bool, error){
+func (ur *dbDemoRepository) GetViewMode(pid uint64) (bool, error) {
 	resp, err := ur.dbm.Query(queryGetViewMode, pid)
 	if err != nil {
 		log.Warn("{GetViewMode} in query: " + queryGetViewMode)

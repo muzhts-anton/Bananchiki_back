@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS convertedslide CASCADE;
 DROP TABLE IF EXISTS vote           CASCADE;
 DROP TABLE IF EXISTS question       CASCADE;
 DROP TABLE IF EXISTS voters         CASCADE;
+DROP TABLE IF EXISTS voter_quiz     CASCADE;
 
 DROP FUNCTION IF EXISTS gen_random_bytes;
 DROP FUNCTION IF EXISTS random_string;
@@ -130,4 +131,10 @@ CREATE TABLE voters (
     name            VARCHAR(32) DEFAULT '' NOT NULL,
     points          BIGINT DEFAULT 0 NOT NULL,
     top_place       SMALLINT DEFAULT 0 NOT NULL
+);
+
+CREATE TABLE voter_quiz (
+    voter_id BIGINT             REFERENCES voters (id),
+    quiz_id BIGINT              REFERENCES quiz (id),
+    CONSTRAINT voter_quiz_id    PRIMARY KEY (voter_id, quiz_id)
 );

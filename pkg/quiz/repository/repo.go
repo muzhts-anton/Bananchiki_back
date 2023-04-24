@@ -5,6 +5,7 @@ import (
 	"banana/pkg/utils/cast"
 	"banana/pkg/utils/database"
 	"banana/pkg/utils/log"
+	"banana/pkg/utils/points"
 )
 
 type dbQuizRepository struct {
@@ -19,7 +20,10 @@ func InitQuizRep(manager *database.DBManager) domain.QuizRepository {
 
 // quizzes
 func (r *dbQuizRepository) CreateQuiz(q domain.Quiz, pid uint64) (uint64, error) {
-	resp, err := r.dbm.Query(queryCreateQuiz, q.Type, q.Question, q.Background, q.FontColor, q.FontSize, q.GraphColor)
+	resp, err := r.dbm.Query(queryCreateQuiz,
+		q.Type, q.Question, q.AnswerTime, q.ResultAfter, q.Cost,
+		q.ExtraPts, q.Background, q.FontColor, q.FontSize, q.GraphColor,
+	)
 	if err != nil {
 		log.Warn("{CreateQuiz} in query: " + queryCreateQuiz)
 		log.Error(err)
@@ -108,7 +112,10 @@ func (r *dbQuizRepository) DeleteQuiz(qid, pid uint64) error {
 }
 
 func (r *dbQuizRepository) UpdateQuiz(q domain.Quiz, pid uint64) error {
-	err := r.dbm.Execute(queryUpdateQuiz, q.Question, q.Background, q.FontColor, q.FontSize, q.GraphColor, q.Type, q.Id)
+	err := r.dbm.Execute(queryUpdateQuiz,
+		q.Question, q.Background, q.FontColor, q.FontSize, q.GraphColor,
+		q.Type, q.AnswerTime, q.ResultAfter, q.Cost, q.ExtraPts, q.Id,
+	)
 	if err != nil {
 		log.Warn("{UpdateQuiz} in query: " + queryUpdateQuiz)
 		log.Error(err)
@@ -127,7 +134,7 @@ func (r *dbQuizRepository) CreateQuizVote(q domain.Vote, qid uint64) error {
 		return err
 	}
 
-	err = r.dbm.Execute(queryCreateQuizVote, qid, q.Idx, q.Option, q.Votes, q.Color)
+	err = r.dbm.Execute(queryCreateQuizVote, qid, q.Idx, q.Option, q.Correct, q.Votes, q.Color)
 	if err != nil {
 		log.Warn("{CreateQuizVote} in query: " + queryCreateQuizVote)
 		log.Error(err)
@@ -138,7 +145,7 @@ func (r *dbQuizRepository) CreateQuizVote(q domain.Vote, qid uint64) error {
 }
 
 func (r *dbQuizRepository) UpdateQuizVote(q domain.Vote, qid uint64) error {
-	err := r.dbm.Execute(queryUpdateQuizVote, q.Option, q.Votes, q.Color, q.Idx, qid)
+	err := r.dbm.Execute(queryUpdateQuizVote, q.Option, q.Votes, q.Color, q.Correct, q.Idx, qid)
 	if err != nil {
 		log.Warn("{UpdateQuizVote} in query: " + queryUpdateQuizVote)
 		log.Error(err)
@@ -175,4 +182,65 @@ func (r *dbQuizRepository) PollQuizVote(idx uint32, qid uint64) error {
 	}
 
 	return nil
+}
+
+func (r *dbQuizRepository) PollQuizVoteTracked(idx uint32, qid uint64, vid uint64) error {
+	resp, err := r.dbm.Query(queryGetVoterCount, qid, vid)
+	if err != nil {
+		log.Warn("{PollQuizVoteTracked} in query: " + queryGetVoterCount)
+		log.Error(err)
+		return err
+	}
+
+	if cast.ToUint64(resp[0][0]) != 0 {
+		return domain.ErrSecondVote
+	}
+
+	err = r.dbm.Execute(queryAppendQuizVoter, qid, vid)
+	if err != nil {
+		log.Warn("{PollQuizVoteTracked} in query: " + queryAppendQuizVoter)
+		log.Error(err)
+	}
+
+	return err
+}
+
+func (r *dbQuizRepository) CalculatePoints(idx uint32, qid uint64, vid uint64) error {
+	resp, err := r.dbm.Query(queryGetQuizInfo, qid)
+	if err != nil {
+		log.Warn("{CalculatePoints} in query: " + queryGetQuizInfo)
+		log.Error(err)
+		return err
+	}
+
+	if cast.ToBool(resp[0][3]) {
+		return domain.ErrRunout
+	}
+
+	tmpresp, err := r.dbm.Query(queryIsVoteCorrect, idx, qid)
+	if err != nil {
+		log.Warn("{CalculatePoints} in query: " + queryPutPts)
+		log.Error(err)
+		return err
+	}
+
+	if !cast.ToBool(tmpresp[0][0]) {
+		return nil
+	}
+
+	pts, err := points.CalculateQuizPoints(
+		cast.ToBool(resp[0][0]), cast.ToUint64(resp[0][1]),
+		cast.ToUint64(resp[0][2]), cast.ToFloat64(resp[0][4]),
+	)
+	if err != nil {
+		return err
+	}
+
+	err = r.dbm.Execute(queryPutPts, pts, vid)
+	if err != nil {
+		log.Warn("{CalculatePoints} in query: " + queryPutPts)
+		log.Error(err)
+	}
+
+	return err
 }

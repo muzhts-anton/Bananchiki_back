@@ -27,8 +27,12 @@ var (
 	ErrEmailExists        = errors.New("Email not unique")
 	ErrBadPassword        = errors.New("Wrong password")
 	ErrNoUser             = errors.New("No user found")
-	
-	ErrWrongEmotions  = errors.New("Wrong Emotions")
+
+	ErrWrongEmotions = errors.New("Wrong Emotions")
 
 	ErrGrpc = errors.New("gRPC error")
+
+	ErrSecondVote          = errors.New("Try to vote twice")
+	ErrRunout              = errors.New("Quiz time has run out")
+	ErrUnexpectedTimeValue = errors.New("Quiz Answer time is beyond expected interval")
 )

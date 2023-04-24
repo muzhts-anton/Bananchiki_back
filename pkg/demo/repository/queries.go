@@ -27,7 +27,7 @@ const (
 	`
 
 	queryGetQuiz = `
-	SELECT id, type, question, background, font_color, font_size, graph_color
+	SELECT id, type, question, background, font_color, font_size, graph_color, runout
 	FROM quiz
 	WHERE id = $1;
 	`
