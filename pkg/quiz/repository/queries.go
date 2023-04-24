@@ -125,3 +125,41 @@ const (
 	SELECT correct FROM vote WHERE idx = $1 AND quiz_id = $2;
 	`
 )
+
+const (
+	queryCompetitionStart = `
+	UPDATE quiz SET runout = FALSE, start_time = current_timestamp WHERE id = $1;
+	`
+
+	queryCompetitionStop = `
+	UPDATE quiz SET runout = TRUE WHERE id = $1;
+	`
+
+	queryCompetitionVoterRegister = `
+	INSERT INTO voters (presentation_id, name) VALUES ($1, $2) RETURNING id;
+	`
+
+	queryGetAllPres = `
+	SELECT id, code FROM presentation;
+	`
+	
+	queryClearAllTopPlaces = `
+	UPDATE voter SET points = 0 WHERE presentation_id = $1;
+	`
+
+	queryGetTopByPts = `
+	SELECT id FROM voters WHERE presentation_id = $1 ORDER BY points DESC LIMIT 5;
+	`
+
+	querySetTopVoter = `
+	UPDATE voters SET top_place = $1 WHERE presentation_id = $2 AND id = $3;
+	`
+
+	queryGetTop = `
+	SELECT id, name, points
+	FROM voters
+	WHERE presentation_id = $1 AND top_place > 0
+	ORDER BY id
+	LIMIT 5;
+	`
+)

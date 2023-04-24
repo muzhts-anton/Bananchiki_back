@@ -4,6 +4,7 @@ import (
 	"banana/pkg/domain"
 	"banana/pkg/utils/cast"
 	"banana/pkg/utils/database"
+	"banana/pkg/utils/hash"
 	"banana/pkg/utils/log"
 	"banana/pkg/utils/points"
 )
@@ -243,4 +244,101 @@ func (r *dbQuizRepository) CalculatePoints(idx uint32, qid uint64, vid uint64) e
 	}
 
 	return err
+}
+
+func (r *dbQuizRepository) CompetitionStart(quizId uint64, presId uint64) error {
+	err := r.dbm.Execute(queryCompetitionStart, quizId)
+	if err != nil {
+		log.Warn("{queryCompetitionStart} in query: " + queryCompetitionStart)
+		log.Error(err)
+		return err
+	}
+
+	return nil
+}
+
+func (r *dbQuizRepository) CompetitionStop(quizId uint64, presId uint64) error {
+	err := r.dbm.Execute(queryCompetitionStop, quizId)
+	if err != nil {
+		log.Warn("{queryCompetitionStop} in query: " + queryCompetitionStop)
+		log.Error(err)
+		return err
+	}
+
+	return nil
+}
+
+func (r *dbQuizRepository) CompetitionVoterRegister(name string, presId uint64) (uint64, error) {
+	resp, err := r.dbm.Query(queryCompetitionVoterRegister, presId, name)
+	if err != nil {
+		log.Warn("{queryCompetitionStop} in query: " + queryCompetitionStop)
+		log.Error(err)
+		return 0, err
+	}
+
+	return cast.ToUint64(resp[0][0]), nil
+}
+
+func (r *dbQuizRepository) GetPresIdByHash(h string) (uint64, error) {
+	resp, err := r.dbm.Query(queryGetAllPres)
+	if err != nil {
+		log.Warn("{GetPresIdByHash} in query: " + queryGetAllPres)
+		log.Error(err)
+		return 0, err
+	}
+
+	for _, pres := range resp {
+		if code := cast.ToString(pres[1]); hash.EncodeToHash(code) == h {
+			return cast.ToUint64(pres[0]), nil
+		}
+	}
+
+	return 0, domain.ErrCodeNotFound
+}
+
+func (r *dbQuizRepository) GetCompetitionResult(pid uint64) ([]domain.ResultItem, error) {
+	resp, err := r.dbm.Query(queryGetTop, pid)
+	if err != nil {
+		log.Warn("{GetCompetitionResult} in query: " + queryGetTop)
+		log.Error(err)
+		return nil, err
+	}
+
+	out := make([]domain.ResultItem, 0)
+	for _, voter := range resp {
+		out = append(out, domain.ResultItem{
+			Id:		cast.ToUint64(voter[0]),
+			Name:   cast.ToString(voter[1]),
+			Points: cast.ToUint64(voter[2]),
+		})
+	}
+
+	return out, nil
+}
+
+func (r *dbQuizRepository) SetCompetitionResult(pid uint64) error {
+	err := r.dbm.Execute(queryClearAllTopPlaces, pid)
+	if err != nil {
+		log.Warn("{SetCompetitionResult} in query: " + queryClearAllTopPlaces)
+		log.Error(err)
+		return err
+	}
+
+	resp, err := r.dbm.Query(queryGetTopByPts, pid)
+	if err != nil {
+		log.Warn("{SetCompetitionResult} in query: " + queryGetTopByPts)
+		log.Error(err)
+		return err
+	}
+
+	for i, voter := range resp {
+		err = r.dbm.Execute(querySetTopVoter, uint16(i+1), pid, cast.ToUint64(voter[0]))
+		if err != nil {
+			log.Warn("{SetCompetitionResult} in query: " + querySetTopVoter)
+			log.Error(err)
+			return err
+		}
+	}
+
+	return nil
 }

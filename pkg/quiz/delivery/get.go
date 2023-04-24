@@ -6,6 +6,8 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"github.com/gorilla/mux"
+	"strconv"
 )
 
 // /quiz/create
@@ -191,4 +193,110 @@ func (h *quizHandler) pollQuizVote(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
+}
+
+func (h *quizHandler) competitionStart(w http.ResponseWriter, r *http.Request){
+	b, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	var q domain.CompetitionHttp
+	err = json.Unmarshal(b, &q)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	h.QuizUsecase.CompetitionStart(q.QuizId, q.PresId)
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h* quizHandler) competitionStop(w http.ResponseWriter, r *http.Request){
+	b, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	var q domain.CompetitionHttp
+	err = json.Unmarshal(b, &q)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	h.QuizUsecase.CompetitionStop(q.QuizId, q.PresId)
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h* quizHandler) competitionVoterRegister(w http.ResponseWriter, r *http.Request){
+	b, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	var q domain.VoteRegisterHttp
+	err = json.Unmarshal(b, &q)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	vId, err := h.QuizUsecase.CompetitionVoterRegister(q.Name, q.Hash)
+
+	if err != nil{
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	out, err := json.Marshal(struct {
+		Id uint64 `json:"id"`
+	}{Id: vId},
+	)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(out)
+}
+
+func (h* quizHandler) GetCompetitionResult(w http.ResponseWriter, r *http.Request){
+	presIdStr, ok := mux.Vars(r)["presId"]
+	if !ok {
+		http.Error(w, domain.ErrUrlParameter.Error(), http.StatusBadRequest)
+		return
+	}
+
+	presId, err := strconv.ParseUint(presIdStr, 10, 64)
+	if err != nil {
+		http.Error(w, domain.ErrUrlParameter.Error(), http.StatusBadRequest)
+		return
+	}
+
+	newResults, err := h.QuizUsecase.GetCompetitionResult(presId)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	out, err := json.Marshal(struct {
+		Top []domain.ResultItem `json:"top"`
+	}{Top: newResults},
+	)
+	w.WriteHeader(http.StatusOK)
+	w.Write(out)
 }

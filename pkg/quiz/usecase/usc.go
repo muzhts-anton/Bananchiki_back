@@ -58,3 +58,60 @@ func (u *quizUsecase) PollQuizVote(idx uint32, qid uint64, votername string, vid
 
 	return u.quizRepo.CalculatePoints(idx, qid, vid)
 }
+
+func (u *quizUsecase) CompetitionStart(quizId uint64, presId uint64) error {
+	return u.quizRepo.CompetitionStart(quizId, presId)
+}
+
+func (u *quizUsecase) CompetitionStop(quizId uint64, presId uint64) error {
+	return u.quizRepo.CompetitionStop(quizId, presId)
+}
+
+func (u *quizUsecase) CompetitionVoterRegister(name string, hash string) (uint64, error) {
+	presId, err := u.quizRepo.GetPresIdByHash(hash)
+	if err != nil {
+		return 0, err
+	}
+
+	return u.quizRepo.CompetitionVoterRegister(name, presId)
+}
+
+func (u *quizUsecase) GetCompetitionResult(presId uint64) ([]domain.ResultItem, error) {
+	prevTop, err := u.quizRepo.GetCompetitionResult(presId)
+	if err != nil {
+		return nil, err
+	}
+
+	err = u.quizRepo.SetCompetitionResult(presId)
+	if err != nil {
+		return nil, err
+	}
+
+	currentTop, err := u.quizRepo.GetCompetitionResult(presId)
+	if err != nil {
+		return nil, err
+	}
+
+	out := make([]domain.ResultItem, len(prevTop))
+	copy(out, prevTop)
+	type elem struct {
+		ri  domain.ResultItem
+		idx int
+	}
+	buf := make([]elem, 0)
+	for i := range prevTop {
+		for j, cv := range currentTop {
+			if out[i].Id == cv.Id {
+				out[i] = cv
+				break
+			} else if j == len(prevTop) {
+				buf = append(buf, elem{ri: cv, idx: i})
+			}
+		}
+	}
+	for _, e := range buf {
+		out[e.idx] = e.ri
+	}
+
+	return out, nil
+}

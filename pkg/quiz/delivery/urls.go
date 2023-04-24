@@ -8,4 +8,9 @@ const (
 	urlUpdateQuizVote = "/quiz/vote/update"
 	urlDeleteQuizVote = "/quiz/vote/delete"
 	urlPollQuizVote   = "/quiz/vote/poll"
+
+	urlCompetitionStart         = "/competition/start"
+	urlCompetitionStop          = "/competition/stop"
+	urlCompetitionVoterRegister = "/competition/voter/register"
+	urlCompetitionResult        = "/competition/{presId}/result"
 )
