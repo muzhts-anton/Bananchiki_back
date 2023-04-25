@@ -54,7 +54,7 @@ const (
 	`
 
 	queryGetVotes = `
-	SELECT idx, option, votes_num, color
+	SELECT idx, option, votes_num, color, correct
 	FROM vote
 	WHERE quiz_id = $1
 	ORDER BY idx;

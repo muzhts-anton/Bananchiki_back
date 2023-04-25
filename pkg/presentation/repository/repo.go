@@ -151,10 +151,11 @@ func (r *dbPresRepository) GetQuizzes(t string, pid uint64) (quizzes []domain.Qu
 		}
 		for _, vote := range tresp {
 			quizzes[i].Votes = append(quizzes[i].Votes, domain.Vote{
-				Idx:    uint32(cast.ToUint16(vote[0])),
-				Option: cast.ToString(vote[1]),
-				Votes:  cast.ToUint64(vote[2]),
-				Color:  cast.ToString(vote[3]),
+				Idx:     uint32(cast.ToUint16(vote[0])),
+				Option:  cast.ToString(vote[1]),
+				Votes:   cast.ToUint64(vote[2]),
+				Color:   cast.ToString(vote[3]),
+				Correct: cast.ToBool(vote[4]),
 			})
 		}
 	}

@@ -1,12 +1,12 @@
 DROP TABLE IF EXISTS users          CASCADE;
+DROP TABLE IF EXISTS voters         CASCADE;
+DROP TABLE IF EXISTS voter_quiz     CASCADE;
 DROP TABLE IF EXISTS presentation   CASCADE;
 DROP TABLE IF EXISTS slideorder     CASCADE;
 DROP TABLE IF EXISTS quiz           CASCADE;
 DROP TABLE IF EXISTS convertedslide CASCADE;
 DROP TABLE IF EXISTS vote           CASCADE;
 DROP TABLE IF EXISTS question       CASCADE;
-DROP TABLE IF EXISTS voters         CASCADE;
-DROP TABLE IF EXISTS voter_quiz     CASCADE;
 
 DROP FUNCTION IF EXISTS gen_random_bytes;
 DROP FUNCTION IF EXISTS random_string;
@@ -91,7 +91,7 @@ CREATE TABLE quiz (
     runout          BOOLEAN DEFAULT TRUE NOT NULL,
     seconds_num     BIGINT DEFAULT 0 NOT NULL,
     result_after    BOOLEAN DEFAULT FALSE NOT NULL,
-    price           BIGINT DEFAULT 1 NOT NULL,
+    price           BIGINT DEFAULT 0 NOT NULL,
     extra_points    BOOLEAN DEFAULT FALSE NOT NULL,
     start_time      TIMESTAMP DEFAULT current_timestamp NOT NULL,
     background      VARCHAR(16) NOT NULL,
