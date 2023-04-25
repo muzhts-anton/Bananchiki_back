@@ -45,7 +45,8 @@ const (
 	queryGetQuizzes = `
 	SELECT
 		quiz.id, slideorder.idx, quiz.type, quiz.question,
-		quiz.background, quiz.font_color, quiz.font_size, quiz.graph_color
+		quiz.background, quiz.font_color, quiz.font_size, quiz.graph_color,
+		quiz.runout, quiz.seconds_num, quiz.result_after, quiz.price, quiz.extra_points
 	FROM quiz
 	JOIN slideorder ON quiz.id = slideorder.item_id
 	WHERE slideorder.type = $1 AND slideorder.presentation_id = $2

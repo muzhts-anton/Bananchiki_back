@@ -18,6 +18,7 @@ type Quiz struct {
 	ResultAfter bool   `json:"answerAfter"`
 	Cost        uint64 `json:"cost"`
 	ExtraPts    bool   `json:"extrapts"`
+	Runout      bool   `json:"runout"`
 	Votes       []Vote `json:"votes"`
 	Background  string `json:"background"`
 	FontColor   string `json:"fontColor"`

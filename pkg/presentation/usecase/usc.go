@@ -87,17 +87,28 @@ func (pu *PresUsecase) GetPres(cid, pid uint64) (p domain.PresApiResponse, err e
 	var tmpidx, qi, si uint32
 	for tmpidx < totalidx {
 		if qi < uint32(len(pres.Quizzes)) && tmpidx == pres.Quizzes[qi].Idx {
+			kind := ""
+			if pres.Quizzes[qi].AnswerTime > 0 || pres.Quizzes[qi].Cost > 0 {
+				kind = domain.SlideTypeTimedQuiz
+			} else {
+				kind = domain.SlideTypeQuiz
+			}
 			p.Slides = append(p.Slides, domain.SlideApiResponse{
-				Idx:        pres.Quizzes[qi].Idx,
-				Kind:       domain.SlideTypeQuiz,
-				QuizId:     pres.Quizzes[qi].Id,
-				Type:       pres.Quizzes[qi].Type,
-				Question:   pres.Quizzes[qi].Question,
-				Vote:       pres.Quizzes[qi].Votes,
-				Background: pres.Quizzes[qi].Background,
-				FontColor:  pres.Quizzes[qi].FontColor,
-				FontSize:   pres.Quizzes[qi].FontSize,
-				GraphColor: pres.Quizzes[qi].GraphColor,
+				Idx:         pres.Quizzes[qi].Idx,
+				Kind:        kind,
+				QuizId:      pres.Quizzes[qi].Id,
+				Type:        pres.Quizzes[qi].Type,
+				Question:    pres.Quizzes[qi].Question,
+				Vote:        pres.Quizzes[qi].Votes,
+				Background:  pres.Quizzes[qi].Background,
+				FontColor:   pres.Quizzes[qi].FontColor,
+				FontSize:    pres.Quizzes[qi].FontSize,
+				GraphColor:  pres.Quizzes[qi].GraphColor,
+				Runout:      pres.Quizzes[qi].Runout,
+				AnswerTime:  pres.Quizzes[qi].AnswerTime,
+				ResultAfter: pres.Quizzes[qi].ResultAfter,
+				Cost:        pres.Quizzes[qi].Cost,
+				ExtraPts:    pres.Quizzes[qi].ExtraPts,
 			})
 			qi++
 		} else if si < uint32(len(pres.Slides)) {

@@ -128,14 +128,19 @@ func (r *dbPresRepository) GetQuizzes(t string, pid uint64) (quizzes []domain.Qu
 	quizzes = make([]domain.Quiz, 0)
 	for i, slide := range resp {
 		quizzes = append(quizzes, domain.Quiz{
-			Id:         cast.ToUint64(slide[0]),
-			Idx:        uint32(cast.ToUint16(slide[1])),
-			Type:       cast.ToString(slide[2]),
-			Question:   cast.ToString(slide[3]),
-			Background: cast.ToString(slide[4]),
-			FontColor:  cast.ToString(slide[5]),
-			FontSize:   cast.ToString(slide[6]),
-			GraphColor: cast.ToString(slide[7]),
+			Id:          cast.ToUint64(slide[0]),
+			Idx:         uint32(cast.ToUint16(slide[1])),
+			Type:        cast.ToString(slide[2]),
+			Question:    cast.ToString(slide[3]),
+			Background:  cast.ToString(slide[4]),
+			FontColor:   cast.ToString(slide[5]),
+			FontSize:    cast.ToString(slide[6]),
+			GraphColor:  cast.ToString(slide[7]),
+			Runout:      cast.ToBool(slide[8]),
+			AnswerTime:  cast.ToUint64(slide[9]),
+			ResultAfter: cast.ToBool(slide[10]),
+			Cost:        cast.ToUint64(slide[11]),
+			ExtraPts:    cast.ToBool(slide[12]),
 		})
 
 		quizzes[i].Votes = make([]domain.Vote, 0)
