@@ -82,7 +82,6 @@ func (ur *dbDemoRepository) GetCurrentDemoSlide(pid uint64) (out domain.SlideApi
 			return domain.SlideApiResponse{}, err
 		}
 
-		out.Kind = domain.SlideTypeQuiz
 		out.QuizId = cast.ToUint64(resp[0][0])
 		out.Type = cast.ToString(resp[0][1])
 		out.Question = cast.ToString(resp[0][2])
@@ -91,6 +90,14 @@ func (ur *dbDemoRepository) GetCurrentDemoSlide(pid uint64) (out domain.SlideApi
 		out.FontSize = cast.ToString(resp[0][5])
 		out.GraphColor = cast.ToString(resp[0][6])
 		out.Runout = cast.ToBool(resp[0][7])
+		out.AnswerTime = cast.ToUint64(resp[0][8])
+		out.Cost = cast.ToUint64(resp[0][8])
+
+		if out.Cost > 0 || out.AnswerTime > 0 {
+			out.Kind = domain.SlideTypeTimedQuiz
+		} else {
+			out.Kind = domain.SlideTypeQuiz
+		}
 
 		out.Vote = make([]domain.Vote, 0)
 		tresp, terr := ur.dbm.Query(queryGetVotes, itemId)
