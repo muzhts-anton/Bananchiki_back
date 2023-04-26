@@ -28,5 +28,6 @@ type DemoRepository interface {
 	ZeroingReactions(pid uint64) error
 	SetAllVotes(pid uint64, value int) error
 	DeletePresQuestions(pid uint64) error
+	DeletePresVoters(pid uint64) error
 	GetViewMode(pid uint64) (bool, error)
 }

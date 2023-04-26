@@ -247,3 +247,30 @@ func (ur *dbDemoRepository) DeletePresQuestions(pid uint64) error {
 
 	return nil
 }
+
+func (ur *dbDemoRepository) DeletePresVoters(pid uint64) error {
+	resp, err := ur.dbm.Query(queryGetAllPresVoters, pid)
+	if err != nil {
+		log.Warn("{DeletePresVoters} in query: " + queryGetAllPresVoters)
+		log.Error(err)
+		return err
+	}
+
+	for _, v := range resp {
+		err = ur.dbm.Execute(queryDeleteVoterQuiz, cast.ToUint64(v[0]))
+		if err != nil {
+			log.Warn("{DeletePresVoters} in query: " + queryDeleteVoterQuiz)
+			log.Error(err)
+			return err
+		}
+	}
+
+	err = ur.dbm.Execute(queryDeletePresVoters, pid)
+	if err != nil {
+		log.Warn("{DeletePresVoters} in query: " + queryDeletePresVoters)
+		log.Error(err)
+		return err
+	}
+
+	return nil
+}

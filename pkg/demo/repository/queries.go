@@ -88,4 +88,16 @@ const (
 	queryDeletePresQuestions = `
 	DELETE FROM question WHERE presentation_id = $1;
 	`
+
+	queryGetAllPresVoters = `
+	SELECT id FROM voters WHERE presentation_id = $1;
+	`
+
+	queryDeletePresVoters = `
+	DELETE FROM voters WHERE presentation_id = $1;
+	`
+
+	queryDeleteVoterQuiz = `
+	DELETE FROM voter_quiz WHERE voter_id = $1;
+	`
 )
