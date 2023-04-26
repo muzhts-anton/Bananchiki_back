@@ -234,7 +234,7 @@ func (r *dbQuizRepository) CalculatePoints(idx uint32, qid uint64, vid uint64) e
 		cast.ToUint64(resp[0][2]), cast.ToFloat64(resp[0][4]),
 	)
 	if err != nil {
-		return err
+		log.Error(err)
 	}
 
 	err = r.dbm.Execute(queryPutPts, pts, vid)
@@ -307,7 +307,7 @@ func (r *dbQuizRepository) GetCompetitionResult(pid uint64) ([]domain.ResultItem
 	out := make([]domain.ResultItem, 0)
 	for _, voter := range resp {
 		out = append(out, domain.ResultItem{
-			Id:		cast.ToUint64(voter[0]),
+			Id:     cast.ToUint64(voter[0]),
 			Name:   cast.ToString(voter[1]),
 			Points: cast.ToUint64(voter[2]),
 		})

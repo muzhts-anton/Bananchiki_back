@@ -24,7 +24,7 @@ func CalculateQuizPoints(mode bool, price uint64, timeTotal uint64, timeSpent fl
 		return price, nil
 	}
 
-	t := timeSpent / float64(timeTotal)
+	t := 1 - timeSpent / float64(timeTotal)
 	if interval0-err < t && t < interval1 {
 		return price + uint64(float64(price)*pricepool[interval0]), nil
 	}
