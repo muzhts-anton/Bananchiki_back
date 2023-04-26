@@ -92,25 +92,31 @@ func (u *quizUsecase) GetCompetitionResult(presId uint64) ([]domain.ResultItem, 
 		return nil, err
 	}
 
-	out := make([]domain.ResultItem, len(prevTop))
-	copy(out, prevTop)
-	type elem struct {
-		ri  domain.ResultItem
-		idx int
+	var idxs = make(map[uint64]int)
+	for i, it := range prevTop {
+		idxs[it.Id] = i
 	}
-	buf := make([]elem, 0)
-	for i := range prevTop {
-		for j, cv := range currentTop {
-			if out[i].Id == cv.Id {
-				out[i] = cv
-				break
-			} else if j == len(prevTop) {
-				buf = append(buf, elem{ri: cv, idx: i})
-			}
+
+	out := make([]domain.ResultItem, len(currentTop))
+	buf := make([]domain.ResultItem, 0)
+	for _, toper := range currentTop {
+		if idx, ex := idxs[toper.Id]; !ex {
+			buf = append(buf, toper)
+		} else {
+			out[idx] = toper
 		}
 	}
-	for _, e := range buf {
-		out[e.idx] = e.ri
+
+	var j int
+LOOP:
+	for _, b := range buf {
+		for out[j].Id != 0 {
+			j++
+			if j >= len(out) {
+				break LOOP
+			}
+		}
+		out[j] = b
 	}
 
 	return out, nil

@@ -144,7 +144,7 @@ const (
 	`
 	
 	queryClearAllTopPlaces = `
-	UPDATE voter SET points = 0 WHERE presentation_id = $1;
+	UPDATE voters SET top_place = 0 WHERE presentation_id = $1;
 	`
 
 	queryGetTopByPts = `

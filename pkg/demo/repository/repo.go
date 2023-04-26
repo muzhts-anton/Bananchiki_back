@@ -91,7 +91,7 @@ func (ur *dbDemoRepository) GetCurrentDemoSlide(pid uint64) (out domain.SlideApi
 		out.GraphColor = cast.ToString(resp[0][6])
 		out.Runout = cast.ToBool(resp[0][7])
 		out.AnswerTime = cast.ToUint64(resp[0][8])
-		out.Cost = cast.ToUint64(resp[0][8])
+		out.Cost = cast.ToUint64(resp[0][9])
 
 		if out.Cost > 0 || out.AnswerTime > 0 {
 			out.Kind = domain.SlideTypeTimedQuiz
