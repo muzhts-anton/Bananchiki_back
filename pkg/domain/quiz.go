@@ -59,9 +59,9 @@ type VoteRegisterHttp struct {
 }
 
 type ResultItem struct {
-	Id     uint64
-	Name   string
-	Points uint64
+	Id     uint64 `json:"id"`
+	Name   string `json:"name"`
+	Points uint64 `json:"points"`
 }
 
 type QuizRepository interface {
