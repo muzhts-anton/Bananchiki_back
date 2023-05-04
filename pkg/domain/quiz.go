@@ -74,6 +74,7 @@ type QuizRepository interface {
 	PollQuizVote(idx uint32, qid uint64) error
 	PollQuizVoteTracked(idx uint32, qid uint64, vid uint64) error
 	CalculatePoints(idx uint32, qid, vid uint64) error
+	FinishCompetition(qid uint64) error
 
 	CompetitionStart(quizId uint64, presId uint64) error
 	CompetitionStop(quizId uint64, presId uint64) error

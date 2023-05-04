@@ -246,6 +246,51 @@ func (r *dbQuizRepository) CalculatePoints(idx uint32, qid uint64, vid uint64) e
 	return err
 }
 
+func (r *dbQuizRepository) FinishCompetition(qid uint64) error {
+	resp, err := r.dbm.Query(queryGetPresId, qid, domain.SlideTypeTimedQuiz)
+	if err != nil {
+		log.Warn("{FinishCompetition} in query: " + queryGetPresId)
+		log.Error(err)
+		return err
+	}
+	if len(resp) != 1 {
+		return domain.ErrDatabaseRequest
+	}
+
+	pid := cast.ToUint64(resp[0][0])
+
+	resp, err = r.dbm.Query(queryGetNumVoterQuiz, qid, pid)
+	if err != nil {
+		log.Warn("{FinishCompetition} in query: " + queryGetNumVoterQuiz)
+		log.Error(err)
+		return err
+	}
+
+	vqNum := cast.ToUint64(resp[0][0])
+
+	resp, err = r.dbm.Query(queryGetNumVoter, pid)
+	if err != nil {
+		log.Warn("{FinishCompetition} in query: " + queryGetNumVoter)
+		log.Error(err)
+		return err
+	}
+
+	vNum := cast.ToUint64(resp[0][0])
+
+	if vNum != vqNum {
+		return nil
+	}
+
+	resp, err = r.dbm.Query(queryFinishCompetition, qid)
+	if err != nil {
+		log.Warn("{FinishCompetition} in query: " + queryFinishCompetition)
+		log.Error(err)
+		return err
+	}
+
+	return nil
+}
+
 func (r *dbQuizRepository) CompetitionStart(quizId uint64, presId uint64) error {
 	err := r.dbm.Execute(queryCompetitionStart, quizId)
 	if err != nil {

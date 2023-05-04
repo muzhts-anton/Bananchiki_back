@@ -46,17 +46,22 @@ func (u *quizUsecase) DeleteQuizVote(idx uint32, qid, cid uint64) error {
 	return u.quizRepo.DeleteQuizVote(idx, qid)
 }
 
-func (u *quizUsecase) PollQuizVote(idx uint32, qid uint64, votername string, vid uint64) (err error) {
+func (u *quizUsecase) PollQuizVote(idx uint32, qid uint64, votername string, vid uint64) error {
 	if votername == "" && vid == 0 {
-		err = u.quizRepo.PollQuizVote(idx, qid)
-	} else {
-		err = u.quizRepo.PollQuizVoteTracked(idx, qid, vid)
-	}
-	if err != nil {
-		return
+		return u.quizRepo.PollQuizVote(idx, qid)
 	}
 
-	return u.quizRepo.CalculatePoints(idx, qid, vid)
+	err := u.quizRepo.PollQuizVoteTracked(idx, qid, vid)
+	if err != nil {
+		return err
+	}
+
+	err = u.quizRepo.CalculatePoints(idx, qid, vid)
+	if err != nil {
+		return err
+	}
+
+	return u.quizRepo.FinishCompetition(qid)
 }
 
 func (u *quizUsecase) CompetitionStart(quizId uint64, presId uint64) error {

@@ -124,6 +124,25 @@ const (
 	queryIsVoteCorrect = `
 	SELECT correct FROM vote WHERE idx = $1 AND quiz_id = $2;
 	`
+
+	queryGetPresId = `
+	SELECT presentation_id FROM slideorder WHERE item_id = $1 AND type = $2;
+	`
+
+	queryGetNumVoterQuiz = `
+	SELECT COUNT(*)
+	FROM voter_quiz
+	JOIN voters ON voters.id = voter_quiz.voter_id
+	WHERE voter_quiz.quiz_id = $1 AND voters.presentation_id = $2;
+	`
+
+	queryGetNumVoter = `
+	SELECT COUNT(*) FROM voters WHERE presentation_id = $1;
+	`
+
+	queryFinishCompetition = `
+	UPDATE quiz SET runout = true WHERE id = $1;
+	`
 )
 
 const (
